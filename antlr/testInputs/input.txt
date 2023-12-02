@@ -1,0 +1,2 @@
+(start > end...+ delay) "Delayed task 1"
+(start...+delay >+ taskDuration) "Delayed task 2"
