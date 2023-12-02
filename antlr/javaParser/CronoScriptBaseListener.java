@@ -64,13 +64,13 @@ public class CronoScriptBaseListener implements CronoScriptListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMilestone(CronoScriptParser.MilestoneContext ctx) { }
+	@Override public void enterEvent(CronoScriptParser.EventContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMilestone(CronoScriptParser.MilestoneContext ctx) { }
+	@Override public void exitEvent(CronoScriptParser.EventContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -100,6 +100,30 @@ public class CronoScriptBaseListener implements CronoScriptListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterSimpleDate(CronoScriptParser.SimpleDateContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSimpleDate(CronoScriptParser.SimpleDateContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDelayedDate(CronoScriptParser.DelayedDateContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDelayedDate(CronoScriptParser.DelayedDateContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterDuration(CronoScriptParser.DurationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -119,6 +143,42 @@ public class CronoScriptBaseListener implements CronoScriptListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitTimeUnit(CronoScriptParser.TimeUnitContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVariableDeclaration(CronoScriptParser.VariableDeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVariableDeclaration(CronoScriptParser.VariableDeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterType(CronoScriptParser.TypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitType(CronoScriptParser.TypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExpression(CronoScriptParser.ExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpression(CronoScriptParser.ExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

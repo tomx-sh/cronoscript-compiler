@@ -47,15 +47,15 @@ public interface CronoScriptListener extends ParseTreeListener {
 	 */
 	void exitTask(CronoScriptParser.TaskContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CronoScriptParser#milestone}.
+	 * Enter a parse tree produced by {@link CronoScriptParser#event}.
 	 * @param ctx the parse tree
 	 */
-	void enterMilestone(CronoScriptParser.MilestoneContext ctx);
+	void enterEvent(CronoScriptParser.EventContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CronoScriptParser#milestone}.
+	 * Exit a parse tree produced by {@link CronoScriptParser#event}.
 	 * @param ctx the parse tree
 	 */
-	void exitMilestone(CronoScriptParser.MilestoneContext ctx);
+	void exitEvent(CronoScriptParser.EventContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CronoScriptParser#span}.
 	 * @param ctx the parse tree
@@ -77,6 +77,26 @@ public interface CronoScriptListener extends ParseTreeListener {
 	 */
 	void exitDate(CronoScriptParser.DateContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CronoScriptParser#simpleDate}.
+	 * @param ctx the parse tree
+	 */
+	void enterSimpleDate(CronoScriptParser.SimpleDateContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CronoScriptParser#simpleDate}.
+	 * @param ctx the parse tree
+	 */
+	void exitSimpleDate(CronoScriptParser.SimpleDateContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CronoScriptParser#delayedDate}.
+	 * @param ctx the parse tree
+	 */
+	void enterDelayedDate(CronoScriptParser.DelayedDateContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CronoScriptParser#delayedDate}.
+	 * @param ctx the parse tree
+	 */
+	void exitDelayedDate(CronoScriptParser.DelayedDateContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CronoScriptParser#duration}.
 	 * @param ctx the parse tree
 	 */
@@ -96,6 +116,36 @@ public interface CronoScriptListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTimeUnit(CronoScriptParser.TimeUnitContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CronoScriptParser#variableDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariableDeclaration(CronoScriptParser.VariableDeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CronoScriptParser#variableDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariableDeclaration(CronoScriptParser.VariableDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CronoScriptParser#type}.
+	 * @param ctx the parse tree
+	 */
+	void enterType(CronoScriptParser.TypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CronoScriptParser#type}.
+	 * @param ctx the parse tree
+	 */
+	void exitType(CronoScriptParser.TypeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CronoScriptParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpression(CronoScriptParser.ExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CronoScriptParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpression(CronoScriptParser.ExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CronoScriptParser#label}.
 	 * @param ctx the parse tree
