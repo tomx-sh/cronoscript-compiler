@@ -22,7 +22,7 @@ public class CronoScriptParser extends Parser {
 		T__24=25, T__25=26, PLUS=27, MINUS=28, TO=29, TOPLUS=30, DELAY=31, DELAYPLUS=32, 
 		DELAYMINUS=33, EQUALS=34, MULT=35, DIV=36, STRING_KW=37, DATE_KW=38, SPAN_KW=39, 
 		DURATION_KW=40, EVENT_KW=41, TASK_KW=42, TIMELINE_KW=43, ID=44, INT=45, 
-		DATE=46, STRING=47, WS=48;
+		DATE=46, STRING=47, COMMENT=48, WS=49;
 	public static final int
 		RULE_cronodile = 0, RULE_timeline = 1, RULE_element = 2, RULE_task = 3, 
 		RULE_event = 4, RULE_span = 5, RULE_date = 6, RULE_simpleDate = 7, RULE_delayedDate = 8, 
@@ -55,7 +55,7 @@ public class CronoScriptParser extends Parser {
 			null, null, null, "PLUS", "MINUS", "TO", "TOPLUS", "DELAY", "DELAYPLUS", 
 			"DELAYMINUS", "EQUALS", "MULT", "DIV", "STRING_KW", "DATE_KW", "SPAN_KW", 
 			"DURATION_KW", "EVENT_KW", "TASK_KW", "TIMELINE_KW", "ID", "INT", "DATE", 
-			"STRING", "WS"
+			"STRING", "COMMENT", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -1373,7 +1373,7 @@ public class CronoScriptParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u00010\u00b4\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u00011\u00b4\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b\u0002"+

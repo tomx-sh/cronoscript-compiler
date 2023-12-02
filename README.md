@@ -211,3 +211,16 @@ Tags are used to tag people, places, or anything you want. They are written afte
 ```CronoScript
 (01/01/2023) "Dad's birthday" @family
 ```
+
+## Comments
+You can add one-line comments to your code by using the `//` symbol:
+```CronoScript
+// This is a comment
+```
+You can also add multi-line comments by using `/*` and `*/`:
+```CronoScript
+/*
+This is a multi-line
+comment.
+*/
+```
