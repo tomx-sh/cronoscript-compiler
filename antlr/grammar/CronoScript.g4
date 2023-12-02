@@ -22,6 +22,11 @@ EVENT_KW:   'event';
 TASK_KW:    'task';
 TIMELINE_KW:'timeline';
 
+// Options
+OPTION:     '#' OPTION_KEY (':' OPTION_KEY)?;
+TAG:        '@' OPTION_KEY;
+OPTION_KEY: [a-z0-9_-]+;
+
 // Others
 ID:         [a-zA-Z_][a-zA-Z_0-9]*;
 INT:        [0-9]+;
@@ -35,19 +40,19 @@ cronodile: (variableDeclaration | timeline | task | event)* EOF;
 
 timeline
     : ID
-    | label? '[' (element (',' element)*)? ']'
+    | label? '[' (element (',' element)*)? ']' (OPTION | TAG)*
     ;
 
 element: timeline | task | event;
 
 task
     : ID
-    | '(' span ')' label?
+    | '(' span ')' label? (OPTION | TAG)*
     ;
 
 event
     : ID
-    |'(' date ')' label?
+    |'(' date ')' label?  (OPTION | TAG)*
     ;
 
 span

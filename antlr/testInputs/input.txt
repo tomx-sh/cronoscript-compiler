@@ -1,6 +1,1 @@
-// This is a comment
-/* This is a multiline
-comment
-*/
-
-(02/01/2023...- 1 day) "Expedited event"
+(01/01/2023) "My event" #option1 @tag1 #option:2 @tag2 #font-size:12px
