@@ -1,3 +1,4 @@
-"Titre de la ligne"
-    (01/01/2023) "Titre de la milestone"
-    (01/01/2023, 01/02/2023) "Titre de la tâche"
+"Titre de la ligne" [
+    (01/01/2023) "Titre de la milestone",
+    (01/01/2023 > 01/02/2023...02/02/2023) "Titre de la tâche"
+]

@@ -1,5 +1,7 @@
-import { CronoScriptV2Lexer } from './antlr/antlr4ts/CronoScriptV2Lexer';
-import { CronoScriptV2Parser } from './antlr/antlr4ts/CronoScriptV2Parser';
+
+/*
+import { CronoScriptV2Lexer } from './antlr/antlr4ts/CronoScriptLexer';
+import { CronoScriptV2Parser } from './antlr/antlr4ts/CronoScriptParser';
 import { CharStream, CharStreams, CommonTokenStream } from 'antlr4ts';
 
 console.log('🐊 CronoScript compiler\n');
@@ -14,3 +16,6 @@ const parser: CronoScriptV2Parser = new CronoScriptV2Parser(tokenStream);
 const tree = parser.planning();
 
 console.log(tree.toStringTree(parser));
+*/
+
+console.log('🐊 CronoScript compiler\n');

@@ -181,6 +181,11 @@ duration delay = 1 week
 (start...+delay >+ taskDuration) "Delayed task 2"
 ```
 
+You can use this notation to represent an expedited date, by using a negative duration:
+```CronoScript
+(02/01/2023...- 1 day) "Expedited event"
+```
+
 ## Options
 Events, tasks, and timelines, and even the whole document, can have options. Options can be used to add more information to an element, or to change its behavior or appearance.
 

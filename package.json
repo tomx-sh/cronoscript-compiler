@@ -1,7 +1,7 @@
 {
 	"scripts": {
 		"build": "tsc",
-		"makeTsParser": "antlr4ts -Dlanguage=TypeScript CronoScriptV2.g4 -o ./antlr/antlr4ts",
+		"makeTsParser": "antlr4ts -Dlanguage=TypeScript CronoScript.g4 -o ./antlr/antlr4ts",
 		"makeJavaParser": "cd ./antlr/scripts && ./makeJavaParser.sh",
 		"grun": "cd ./antlr/scripts && ./runGrun.sh",
 		"test": "pnpm run makeJavaParser && pnpm run grun",

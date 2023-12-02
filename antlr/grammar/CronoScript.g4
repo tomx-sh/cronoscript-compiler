@@ -1,55 +1,60 @@
 // Corrected ANTLR Grammar
 grammar CronoScript;
 
+PLUS:       '+';
+MINUS:      '-';
+TO:         '>';
+TOPLUS:     '>+';
+DELAY:      '...';
+DELAYPLUS:  '...+' | '... +' | '..+';
+DELAYMINUS: '...-' | '... -' | '..-';
+EQUALS:     '=';
+ID:         [a-zA-Z_][a-zA-Z_0-9]*;
+INT:        [0-9]+;
+DATE:       [0-9][0-9]'/'[0-9][0-9]'/'[0-9][0-9][0-9][0-9];
+STRING:     '"' ( ~('\\'|'\n'|'\r'|'"'|'['|']') )* '"';
+WS:         [ \t\r\n]+ -> skip;
+
 // Entry point of the parser
-planning: (element | dateVariableDeclaration)* EOF;
+cronodile: (timeline | task | milestone)* EOF;
 
-group
-    : label? string? groupBody
-    | string? label? groupBody
+timeline: label? '[' (element (',' element)*)? ']';
+
+element: timeline | task | milestone;
+
+task: '(' span ')' label?;
+
+milestone: '(' date ')' label?;
+
+//dateVariableDeclaration: 'date' ID EQUALS date;
+
+//timePeriodVariableDeclaration: 'timePeriod' ID EQUALS timePeriod;
+
+span
+    : date TO date
+    | date TOPLUS duration
     ;
 
-groupBody: '(' (element (',' element)*)? ')';
 
-element: group | task | milestone;
+date: simpleDate | delayedDate;
 
-task
-    : '(' duration ')' label? string?
-    | '(' duration ')' string? label?
-    | label? '(' duration ')' string?
-    | label? string? '(' duration ')'
-    | string? '(' duration ')' label?
-    | string? label? '(' duration ')'
+simpleDate
+    : DATE
+    | date PLUS duration
     ;
 
-milestone
-    : '(' date ')' label? string?
-    | '(' date ')' string? label?
-    | label? '(' date ')' string?
-    | label? string? '(' date ')'
-    | string? '(' date ')' label?
-    | string? label? '(' date ')'
+delayedDate
+    : date DELAY date
+    | date DELAYPLUS duration
+    | date DELAYMINUS duration
     ;
-
-dateVariableDeclaration: 'date' ID EQUALS date;
-
-timePeriodVariableDeclaration: 'timePeriod' ID EQUALS timePeriod;
 
 duration
-    : date TO date
-    | date TOPLUS timePeriod
-    ;
-
-date
-    : DATE
-    | date PLUS timePeriod
-    | date DELAY date
-    | date DELAYPLUS timePeriod
-    ;
-
-timePeriod
     : INT timeUnit
-    | timePeriod PLUS timePeriod;
+    | duration PLUS duration
+    | duration MINUS duration
+    | date MINUS date
+    ;
 
 timeUnit
     : 's'   | 'second'  | 'seconds'
@@ -61,20 +66,8 @@ timeUnit
     | 'y'   | 'year'    | 'years'
     ;
 
-label: '[' string ']';
-
-string: STRING;
+label: STRING;
 
 
-PLUS:       '+';
-TO:         '>';
-TOPLUS:     '>+';
-DELAY:      '...';
-DELAYPLUS:  '...+' | '... +' | '..+';
-EQUALS:     '=';
-ID:         [a-zA-Z_][a-zA-Z_0-9]*;
-INT:        [0-9]+;
-DATE:       [0-9][0-9]'/'[0-9][0-9]'/'[0-9][0-9][0-9][0-9];
-STRING:     '"' ( ~('\\'|'\n'|'\r'|'"'|'['|']') )* '"';
-WS:         [ \t\r\n]+ -> skip;
+
 
