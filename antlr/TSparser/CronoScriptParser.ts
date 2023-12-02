@@ -24,6 +24,8 @@ import { VocabularyImpl } from "antlr4ts/VocabularyImpl";
 import * as Utils from "antlr4ts/misc/Utils";
 
 import { CronoScriptListener } from "./CronoScriptListener";
+import { CronoScriptVisitor } from "./CronoScriptVisitor";
+
 
 export class CronoScriptParser extends Parser {
 	public static readonly T__0 = 1;
@@ -1475,6 +1477,14 @@ export class CronodileContext extends ParserRuleContext {
 			listener.exitCronodile(this);
 		}
 	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitCronodile) {
+			return visitor.visitCronodile(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
 }
 
 
@@ -1527,6 +1537,14 @@ export class TimelineContext extends ParserRuleContext {
 			listener.exitTimeline(this);
 		}
 	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitTimeline) {
+			return visitor.visitTimeline(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
 }
 
 
@@ -1555,6 +1573,14 @@ export class ElementContext extends ParserRuleContext {
 	public exitRule(listener: CronoScriptListener): void {
 		if (listener.exitElement) {
 			listener.exitElement(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitElement) {
+			return visitor.visitElement(this);
+		} else {
+			return visitor.visitChildren(this);
 		}
 	}
 }
@@ -1603,6 +1629,14 @@ export class TaskContext extends ParserRuleContext {
 			listener.exitTask(this);
 		}
 	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitTask) {
+			return visitor.visitTask(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
 }
 
 
@@ -1649,6 +1683,14 @@ export class EventContext extends ParserRuleContext {
 			listener.exitEvent(this);
 		}
 	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitEvent) {
+			return visitor.visitEvent(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
 }
 
 
@@ -1685,6 +1727,14 @@ export class SpanContext extends ParserRuleContext {
 			listener.exitSpan(this);
 		}
 	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitSpan) {
+			return visitor.visitSpan(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
 }
 
 
@@ -1711,6 +1761,14 @@ export class DateContext extends ParserRuleContext {
 	public exitRule(listener: CronoScriptListener): void {
 		if (listener.exitDate) {
 			listener.exitDate(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitDate) {
+			return visitor.visitDate(this);
+		} else {
+			return visitor.visitChildren(this);
 		}
 	}
 }
@@ -1742,6 +1800,14 @@ export class SimpleDateContext extends ParserRuleContext {
 	public exitRule(listener: CronoScriptListener): void {
 		if (listener.exitSimpleDate) {
 			listener.exitSimpleDate(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitSimpleDate) {
+			return visitor.visitSimpleDate(this);
+		} else {
+			return visitor.visitChildren(this);
 		}
 	}
 }
@@ -1779,6 +1845,14 @@ export class DelayedDateContext extends ParserRuleContext {
 	public exitRule(listener: CronoScriptListener): void {
 		if (listener.exitDelayedDate) {
 			listener.exitDelayedDate(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitDelayedDate) {
+			return visitor.visitDelayedDate(this);
+		} else {
+			return visitor.visitChildren(this);
 		}
 	}
 }
@@ -1829,6 +1903,14 @@ export class DurationContext extends ParserRuleContext {
 			listener.exitDuration(this);
 		}
 	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitDuration) {
+			return visitor.visitDuration(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
 }
 
 
@@ -1848,6 +1930,14 @@ export class TimeUnitContext extends ParserRuleContext {
 	public exitRule(listener: CronoScriptListener): void {
 		if (listener.exitTimeUnit) {
 			listener.exitTimeUnit(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitTimeUnit) {
+			return visitor.visitTimeUnit(this);
+		} else {
+			return visitor.visitChildren(this);
 		}
 	}
 }
@@ -1879,6 +1969,14 @@ export class VariableDeclarationContext extends ParserRuleContext {
 			listener.exitVariableDeclaration(this);
 		}
 	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitVariableDeclaration) {
+			return visitor.visitVariableDeclaration(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
 }
 
 
@@ -1905,6 +2003,14 @@ export class TypeContext extends ParserRuleContext {
 	public exitRule(listener: CronoScriptListener): void {
 		if (listener.exitType) {
 			listener.exitType(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitType) {
+			return visitor.visitType(this);
+		} else {
+			return visitor.visitChildren(this);
 		}
 	}
 }
@@ -1949,6 +2055,14 @@ export class ExpressionContext extends ParserRuleContext {
 			listener.exitExpression(this);
 		}
 	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitExpression) {
+			return visitor.visitExpression(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
 }
 
 
@@ -1970,6 +2084,14 @@ export class StringContext extends ParserRuleContext {
 	public exitRule(listener: CronoScriptListener): void {
 		if (listener.exitString) {
 			listener.exitString(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitString) {
+			return visitor.visitString(this);
+		} else {
+			return visitor.visitChildren(this);
 		}
 	}
 }
@@ -1994,6 +2116,14 @@ export class OptionContext extends ParserRuleContext {
 			listener.exitOption(this);
 		}
 	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitOption) {
+			return visitor.visitOption(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
 }
 
 
@@ -2014,6 +2144,14 @@ export class TagContext extends ParserRuleContext {
 	public exitRule(listener: CronoScriptListener): void {
 		if (listener.exitTag) {
 			listener.exitTag(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: CronoScriptVisitor<Result>): Result {
+		if (visitor.visitTag) {
+			return visitor.visitTag(this);
+		} else {
+			return visitor.visitChildren(this);
 		}
 	}
 }
