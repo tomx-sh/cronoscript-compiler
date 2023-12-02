@@ -30,20 +30,34 @@ WS:         [ \t\r\n]+ -> skip;
 // Entry point of the parser
 cronodile: (variableDeclaration | timeline | task | event)* EOF;
 
-timeline: label? '[' (element (',' element)*)? ']';
+timeline
+    : ID
+    | label? '[' (element (',' element)*)? ']'
+    ;
 
 element: timeline | task | event;
 
-task: '(' span ')' label?;
+task
+    : ID
+    | '(' span ')' label?
+    ;
 
-event: '(' date ')' label?;
+event
+    : ID
+    |'(' date ')' label?
+    ;
 
 span
-    : date TO date
+    : ID
+    | date TO date
     | date TOPLUS duration
     ;
 
-date: simpleDate | delayedDate;
+date
+    : ID
+    | simpleDate
+    | delayedDate
+    ;
 
 simpleDate
     : DATE
@@ -58,7 +72,8 @@ delayedDate
     ;
 
 duration
-    : INT timeUnit
+    : ID
+    | INT timeUnit
     | duration PLUS duration
     | duration MINUS duration
     | date MINUS date
@@ -81,14 +96,17 @@ variableDeclaration: type ID EQUALS expression;
 type : STRING_KW | DATE_KW | SPAN_KW | DURATION_KW | EVENT_KW | TASK_KW | TIMELINE_KW;
 
 expression
-    : label
-    | date
-    | span
-    | duration
-    | event
+    : timeline
     | task
-    | timeline
+    | event
+    | span
+    | date
+    | duration
+    | label
     ;
 
 
-label: STRING;
+label
+    : ID
+    | STRING
+    ;

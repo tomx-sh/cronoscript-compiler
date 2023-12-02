@@ -107,7 +107,7 @@ duration projectDuration = 6 months
 
 * **event**
 ```CronoScript
-event event = (01/01/2023) "Tom's birthday"
+event birthday = (01/01/2023) "Tom's birthday"
 ```
 * **task**
 ```CronoScript
@@ -116,7 +116,7 @@ task carFix = (01/01/2023 > 02/02/2023) "Fix the car"
 
 * **timeline**
 ```CronoScript
-timeline timeline = "Car project" [
+timeline carProject = "Car project" [
     (01/01/2023) "Buy the car",
     carFix,
     (02/02/2023) "Sell the car"
