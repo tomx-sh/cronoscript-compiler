@@ -1,1 +1,6 @@
-(01/01/2023) "My event" #option1 @tag1 #option:2 @tag2 #font-size:12px
+#date-format:DD/MM/YYYY
+@Team
+
+"My project" [
+    (01/01/2023) "Hello" #color:blue #font-size:14px @Tom
+]

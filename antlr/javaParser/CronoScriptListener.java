@@ -147,13 +147,33 @@ public interface CronoScriptListener extends ParseTreeListener {
 	 */
 	void exitExpression(CronoScriptParser.ExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CronoScriptParser#label}.
+	 * Enter a parse tree produced by {@link CronoScriptParser#string}.
 	 * @param ctx the parse tree
 	 */
-	void enterLabel(CronoScriptParser.LabelContext ctx);
+	void enterString(CronoScriptParser.StringContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CronoScriptParser#label}.
+	 * Exit a parse tree produced by {@link CronoScriptParser#string}.
 	 * @param ctx the parse tree
 	 */
-	void exitLabel(CronoScriptParser.LabelContext ctx);
+	void exitString(CronoScriptParser.StringContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CronoScriptParser#option}.
+	 * @param ctx the parse tree
+	 */
+	void enterOption(CronoScriptParser.OptionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CronoScriptParser#option}.
+	 * @param ctx the parse tree
+	 */
+	void exitOption(CronoScriptParser.OptionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CronoScriptParser#tag}.
+	 * @param ctx the parse tree
+	 */
+	void enterTag(CronoScriptParser.TagContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CronoScriptParser#tag}.
+	 * @param ctx the parse tree
+	 */
+	void exitTag(CronoScriptParser.TagContext ctx);
 }

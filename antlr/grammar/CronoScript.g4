@@ -22,37 +22,39 @@ EVENT_KW:   'event';
 TASK_KW:    'task';
 TIMELINE_KW:'timeline';
 
+//Dates
+DATE:       [0-9][0-9]'/'[0-9][0-9]'/'[0-9][0-9][0-9][0-9];
+
 // Options
 OPTION:     '#' OPTION_KEY (':' OPTION_KEY)?;
 TAG:        '@' OPTION_KEY;
-OPTION_KEY: [a-z0-9_-]+;
+OPTION_KEY: [a-zA-Z0-9_/-]+;
 
 // Others
 ID:         [a-zA-Z_][a-zA-Z_0-9]*;
 INT:        [0-9]+;
-DATE:       [0-9][0-9]'/'[0-9][0-9]'/'[0-9][0-9][0-9][0-9];
 STRING:     '"' ( ~('\\'|'\n'|'\r'|'"'|'['|']') )* '"';
 COMMENT:    ('//' ~[\r\n]* | '/*' .*? '*/') -> skip;
 WS:         [ \t\r\n]+ -> skip;
 
 // Entry point of the parser
-cronodile: (variableDeclaration | timeline | task | event)* EOF;
+cronodile: (option | tag)* (variableDeclaration | timeline | task | event)* EOF;
 
 timeline
     : ID
-    | label? '[' (element (',' element)*)? ']' (OPTION | TAG)*
+    | string? '[' (element (',' element)*)? ']' (option | tag)*
     ;
 
 element: timeline | task | event;
 
 task
     : ID
-    | '(' span ')' label? (OPTION | TAG)*
+    | '(' span ')' string? (option | tag)*
     ;
 
 event
     : ID
-    |'(' date ')' label?  (OPTION | TAG)*
+    |'(' date ')' string?  (option | tag)*
     ;
 
 span
@@ -115,11 +117,15 @@ expression
     | span
     | date
     | duration
-    | label
+    | string
     ;
 
 
-label
+string
     : ID
     | STRING
     ;
+
+option: OPTION;
+
+tag: TAG;
