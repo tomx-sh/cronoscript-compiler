@@ -13,7 +13,7 @@ The idea behind CronoScript is to be able to generate plannings from a simple te
  The language is designed to be as simple as possible, while still being powerful enough to generate complex and dynamic plannings.
 
  ### Main concepts
-The main concepts of CronoScript are:
-- **Milestone**: A milestone is a date with a label. It can be used to represent an event, a deadline, or any other important date.
-- **Task**: A task is a period of time with a label. It can be used to represent a project, a task, or any other period of time.
-- **Timeline**: A timeline is a horizontal line on which you can put milestones and tasks. You can have as many timelines as you want.
+CronoScript is based on 3 simple concepts:
+- **Event**: An event is a point in time. It can be used to represent a milestone, a deadline, or anything that happens at a specific time.
+- **Task**: A task is a period of time. It can be used to represent a project, a meeting, or any activity that takes place over a period of time.
+- **Timeline**: A timeline is a group of milestones and tasks.
