@@ -3,10 +3,11 @@
 # The following line is used to import the ANTLR_JAR variable from the .env file
 # ANTLR_JAR stores the path to the antlr4 jar file
 # It is used to run the makeJavaParser.sh and runGrun.sh scripts
-set -a
-source ../../.env
-set +a
+#set -a
+#source ../../.env
+#set +a
 
+ANTLR_JAR="../antlr-4.13.1-complete.jar"
 OUTPUT_DIR="../javaParser"
 GRAMMAR_NAME="CronoScript"
 GRAMMAR_DIR="../grammar"

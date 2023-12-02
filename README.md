@@ -6,6 +6,17 @@ CronoScript is used in the [Cronodile application](https://www.cronodile.com) to
 
 This project is a work in progress. The language may drastically change in the future, and a lot of features are still to come.
 
+## Requirements
+- [pnpm](https://pnpm.io/) (or npm)
+- [Node.js](https://nodejs.org/en/) (v14 or higher)
+- [TypeScript](https://www.typescriptlang.org/) (v4 or higher)
+- [ANTLR Dev tools](https://www.antlr.org/) (v4 or higher)
+- [Java](https://www.java.com/) (v8 or higher)
+
+Running `pnpm install` will install all the dependencies. The main dependencies are:
+- [antlr4ts](https://www.npmjs.com/package/antlr4ts)
+- [antlr4ts-cli](https://www.npmjs.com/package/antlr4ts-cli)
+
 ## CronoScript
 ### What is it?
 The idea behind CronoScript is to be able to generate plannings from a simple text file. All the information is contained in the text file, and no other external configuration is needed. That means you can easily store and share your plannings. And as CronoScript aims to become an open standard, you are not tied to a specific application.
