@@ -33,7 +33,7 @@ If you want to give it a label, you can write it inside quotes:
 ```
 
 ## Tasks
-A task is exactly like an event, but with 2 dates:
+A task is exactly like an event, but with 2 dates, separated by `>`:
 
 ```CronoScript
 (06/06/2023 > 07/07/2023) "Vacations"
@@ -82,33 +82,116 @@ Timelines can be nested:
 ## Variables
 You can define variables to store values and reuse them later. Almost everything can be stored in a variable, simply use the appropriate keyword:
 
-* **string** to store a text label, e.g. `"Car project"`
-* **date** to store a date, e.g. `01/01/2023`, `01/01/2023 12:00` or `monday 1 january 2023`
-* **span** to store a task's time span, e.g. `(01/01/2023 > 02/02/2023)`
-* **duration** to store a duration, e.g. `2 days`
-* **event**
-* **task**
-* **timeline**
-
-Examples:
+* **string** to store a text label:
 ```CronoScript
 string description = "Car project"
+```
+* **date** to store a date:
+```CronoScript
+date birthday = 09/09/2023
+date lunch = 01/01/2023 12:00
+date rendezvous = monday 5 january 2023 15:00
+```
 
-date start = 01/01/2023
-
-date end = 02/02/2023
-
+* **span** to store a task's time span:
+```CronoScript
 span taskSpan = (01/01/2023 > 02/02/2023)
+```
 
+* **duration** to store a duration, e.g. `2 days`
+```CronoScript
 duration taskDuration = 2 days
+duration meetingDuration = 1 hour 30 minutes
+duration projectDuration = 6 months
+```
 
+* **event**
+```CronoScript
 event event = (01/01/2023) "Tom's birthday"
+```
+* **task**
+```CronoScript
+task carFix = (01/01/2023 > 02/02/2023) "Fix the car"
+```
 
-task task = (01/01/2023 > 02/02/2023) "Fix the car"
-
+* **timeline**
+```CronoScript
 timeline timeline = "Car project" [
     (01/01/2023) "Buy the car",
-    (01/01/2023 > 02/02/2023) "Fix the car",
+    carFix,
     (02/02/2023) "Sell the car"
 ]
+```
+
+## Date operations
+### Addition and substraction
+You can add a duration to a date to get a new date. Simply use the `+` operator:
+```CronoScript
+(01/01/2023 + 2 days)
+// Is equivalent to
+(03/01/2023)
+```
+This can be used for events or tasks:
+```CronoScript
+(01/02/2023 > 01/02/2023 + 2 days) "Write an essay"
+```
+As the date is the same before and after the `>` operator, you can omit the second date:
+```CronoScript
+(01/02/2023 >+ 2 days) "Write an essay"
+```
+You can do the same with substraction, using the `-` operator:
+```CronoScript
+(01/01/2023 - 2 days) "Expedited meeting"
+(01/01/2023 > 15/02/2023 - 1 week) "Shortened project"
+```
+
+### Multiplication and division
+You can multiply or divide a duration by a number to get a new duration. Simply use the `*` or `/` operator:
+```CronoScript
+2 days * 2
+// Is equivalent to
+4 days
+```
+
+### Delay
+You may want to communicate a delayed date, while keeping track of the original date. A delayed date is a special kind of date that is represented by the original date, followed by `...` and the delayed date:
+```CronoScript
+(02/01/2023...03/01/2023) "Delayed event"
+```
+As we saw before, a date can also be an addition of a duration to a date:
+```CronoScript
+(02/01/2023...02/01/2023 + 1 day) "Delayed event"
+```
+This can be shortened to:
+```CronoScript
+(02/01/2023...+ 1 day) "Delayed event"
+```
+Of course, you can use this with tasks:
+```CronoScript
+(02/01/2023 > 14/01/2023...+ 1 week) "Delayed task"
+```
+And make use of variables:
+```CronoScript
+date start = 02/01/2023
+date end = 14/01/2023
+duration taskDuration = 1 month
+duration delay = 1 week
+
+(start > end...+ delay) "Delayed task 1"
+(start...+delay >+ taskDuration) "Delayed task 2"
+```
+
+## Options
+Events, tasks, and timelines, and even the whole document, can have options. Options can be used to add more information to an element, or to change its behavior or appearance.
+
+Options are written after a `#` symbol:
+```CronoScript
+(01/01/2023) "Dad's birthday" #color:blue #font-size:20px
+```
+A list of options is yet to be defined.
+
+## Tags
+Tags are used to tag people, places, or anything you want. They are written after a `@` symbol:
+```CronoScript
+(01/01/2023) "Dad's birthday" @family
 ```
