@@ -2,7 +2,7 @@
 ## Introduction
 Welcome to the CronoScript compiler repository! This project is used to design **CronoScript**, a new _Domain Specific Language (DSL)_ for generating dynamic plannings, particularly useful for project management.
 
-CronoScript is used in the [Cronodile application](www.cronodile.com) to generate plannings representations from text.
+CronoScript is used in the [Cronodile application](https://www.cronodile.com) to generate plannings representations from text.
 
 This project is a work in progress. The language may drastically change in the future, and a lot of features are still to come.
 
