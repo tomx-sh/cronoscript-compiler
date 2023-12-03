@@ -12,6 +12,8 @@ const input: string = `
 #bigTitle
 @Team
 
+(01/01/2023) "My event" #color:red #font-size:12px @Tom @Team
+
 "My project" [
     (01/01/2023) "Hello" #color:blue #font-size:14px @Tom
 ]
@@ -25,5 +27,5 @@ const visitor = new CronoScriptVisitorImpl();
 const result = visitor.visit(tree);
 
 //console.log(tree.toStringTree(parser));
-console.log("\nRESULT: " + JSON.stringify(result) + "\n");
+console.log("\nRESULT: " + JSON.stringify(result, null, 2) + "\n");
 
