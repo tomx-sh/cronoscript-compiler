@@ -50,6 +50,14 @@ A task is exactly like an event, but with 2 dates, separated by `>`:
 (06/06/2023) > (07/07/2023) "Vacations"
 ```
 
+A task can be seen as a group of 2 events:
+```CronoScript
+[
+    (06/06/2023) "Vacations start"
+    (07/07/2023) "Vacations end",
+]
+```
+
 ## Timelines
 To make a timeline, simply group events and tasks together inside brackets:
 
@@ -155,12 +163,12 @@ This can be used for events or tasks:
 ```
 As the date is the same before and after the `>` operator, you can omit the second date:
 ```CronoScript
-(01/02/2023 >+ 2 days) "Write an essay"
+(01/02/2023) >+ (2 days) "Write an essay"
 ```
 You can do the same with substraction, using the `-` operator:
 ```CronoScript
 (01/01/2023 - 2 days) "Expedited meeting"
-(01/01/2023 > 15/02/2023 - 1 week) "Shortened project"
+(01/01/2023) > (15/02/2023 - 1 week) "Shortened project"
 ```
 
 ### Multiplication and division
