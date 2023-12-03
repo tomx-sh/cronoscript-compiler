@@ -12,7 +12,8 @@ const input: string = `
 #bigTitle
 @Team
 
-(01/01/2023) "My event" #color:red #font-size:12px @Tom @Team
+(01/01/2023)...(01/02/2023) "My event" #color:red #font-size:12px @Tom @Team
+(01/01/2023) > (01/02/2023) "My task" #color:green #font-size:12px @Tom @Team
 
 "My project" [
     (01/01/2023) "Hello" #color:blue #font-size:14px @Tom

@@ -91,13 +91,13 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
 
 
     visitEvent(ctx: parser.EventContext): model.Event | null {
-        
         // TODO: handle the case where the date is an ID ; browse the variable map to find the date
         if (ctx.ID()) {
             console.log("This date is an ID: " + ctx.ID()!.text);
             //return ctx.ID()!.text;
         }
 
+        // Find date
         const dateContext = ctx.date();
         if (!dateContext) {
             console.warn("Event has no date");
@@ -109,14 +109,16 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
             return null;
         }
 
+        // Initialize event
         const event: model.Event = {date};
 
+        // Find label
         const label = ctx.string() ? this.visitString(ctx.string()!) : null;
-
         if (label) {
             event.label = label;
         }
 
+        // Find options
         const options: model.Option[] = [];
         ctx.option().forEach(option => {
             const optionObject = this.visitOption(option);
@@ -124,11 +126,11 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                 options.push(optionObject);
             }
         });
-
         if (options.length > 0) {
             event.options = options;
         }
 
+        // Find tags
         const tags: model.Tag[] = [];
         ctx.tag().forEach(tag => {
             const tagObject = this.visitTag(tag);
@@ -136,7 +138,6 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                 tags.push(tagObject);
             }
         });
-
         if (tags.length > 0) {
             event.tags = tags;
         }
@@ -145,9 +146,10 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
     }
 
 
-    visitDate(ctx: parser.DateContext): string | null {
+    visitDate(ctx: parser.DateContext): model.Date | null {
         if (ctx.ID()) {
-            return ctx.ID()!.text;
+            // TODO: handle the case where the date is an ID ; browse the variable map to find the date
+            return null;
         } else if (ctx.simpleDate()) {
             return this.visitSimpleDate(ctx.simpleDate()!);
         } else if (ctx.delayedDate()) {
@@ -156,13 +158,94 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         return null;
     }
 
-    visitSimpleDate(ctx: parser.SimpleDateContext): string | null {
-        return ctx.text;
+    visitSimpleDate(ctx: parser.SimpleDateContext): model.Date | null {
+        const dateString = ctx.text;
+        if (dateString == "") {
+            console.warn("Date is empty");
+            return null;
+        }
+        
+        // TODO: handle the case where the date is an ID ; browse the variable map to find the date
+        if (ctx.ID()) {
+            return null;
+        }
+
+        // Case where the date is of form 01/01/2023
+        if (ctx.DATE()) {
+            const dateText = ctx.DATE()!.text;
+            const dateContent = dateText.substring(1, dateText.length - 1); // substring to remove the parenthesis
+            return {originalDate: dateContent};
+        }
+
+        // TODO: handle dates operations
+        /*
+        // Case where the date is of form 01/01/2023 + 1 month or 01/01/2023 - 1 month
+        if (ctx.DATE() && ctx.duration()) {
+
+            // Case addition
+            if (ctx.PLUS()) {
+                const duration = this.visitDuration(ctx.duration()!);
+                if (duration) {
+                    return {originalDate: dateString, delayedDate: `${dateString} + ${duration}`};
+                } else {
+                    return null;
+                }
+            }
+        }
+        */
+
+        return null;
     }
 
-    visitDelayedDate(ctx: parser.DelayedDateContext): string | null {
-        return ctx.text;
+    visitDelayedDate(ctx: parser.DelayedDateContext): model.Date | null {
+        // TODO: handle the case where the date is an ID ; browse the variable map to find the date
+        const dateString = ctx.text;
+        if (dateString == "") {
+            console.warn("Date is empty");
+            return null;
+        }
+        
+        // Case where the date is of form simpleDate...simpleDate
+        if (ctx.simpleDate().length == 2) {
+            const startDate = this.visitSimpleDate(ctx.simpleDate(0)!);
+            const endDate = this.visitSimpleDate(ctx.simpleDate(1)!);
+            if (startDate && endDate) {
+                return {originalDate: startDate.originalDate, delayedDate: endDate.originalDate};
+            } else {
+                return null;
+            }
+        }
+
+        // Case where the date is of form simpleDate...+duration or simpleDate...-duration
+        if (ctx.simpleDate().length == 1 && ctx.duration()) {
+            const startDate = this.visitSimpleDate(ctx.simpleDate(0)!);
+            const duration = this.visitDuration(ctx.duration()!);
+            if (startDate && duration) {
+                // TODO: handle dates operations
+                if (ctx.DELAYPLUS()) {
+                    return {originalDate: startDate.originalDate, delayedDate: `${startDate.originalDate} + ${duration}`};
+                } else if (ctx.DELAYMINUS()) {
+                    return {originalDate: startDate.originalDate, delayedDate: `${startDate.originalDate} - ${duration}`};
+                }
+            } else {
+                return null;
+            }
+        }
+
+        return null;
     }
+
+    visitDuration(ctx: parser.DurationContext): string | null {
+        const durationString = ctx.text;
+        if (durationString == "") {
+            console.warn("Duration is empty");
+            return null;
+        }
+        // TODO: handle the case where the duration is an ID ; browse the variable map to find the duration
+        // TODO: handle the times units
+        return durationString;
+    }
+    
 
     visitString(ctx: parser.StringContext): string | null {
         const string = ctx.text;
@@ -175,43 +258,5 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         }
     }
 
-
-
-
-
-
-
-
-
-
-    /*
-    visitDate(ctx: parser.DateContext) {
-
-        if (ctx.ID()) {
-            console.log("This date is an ID: " + ctx.ID()!.text);
-            return ctx.ID()!.text;
-
-        } else if (ctx.simpleDate()) {
-            console.log("This date is a simple date: " + ctx.simpleDate()!.text);
-            return this.visitSimpleDate(ctx.simpleDate()!);
-
-        } else if (ctx.delayedDate()) {
-            console.log("This date is a delayed date: " + ctx.delayedDate()!.text);
-            return this.visitDelayedDate(ctx.delayedDate()!);
-        }
-
-        return this.visitChildren(ctx);
-    }
-
-    visitDelayedDate(ctx: parser.DelayedDateContext) {
-        console.log("Visiting delayed date: " + ctx.text);
-        return ctx.text;
-    }
-
-    visitSimpleDate(ctx: parser.SimpleDateContext) {
-        console.log("Visiting simple date: " + ctx.text);
-        return ctx.text;
-    }
-    */
 
 }

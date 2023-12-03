@@ -23,7 +23,8 @@ TASK_KW:    'task';
 TIMELINE_KW:'timeline';
 
 //Dates
-DATE:       [0-9][0-9]'/'[0-9][0-9]'/'[0-9][0-9][0-9][0-9];
+//DATE:       [0-9][0-9]'/'[0-9][0-9]'/'[0-9][0-9][0-9][0-9];
+DATE: '(' ( ~('\\'|'\n'|'\r'|'"'|'['|']'|'('|')') )+ ')';
 
 // Options
 // If you modify those, you must modify the visitor's visitOption and visitTag methods [here](CronoScriptVisitorImpl.ts)
@@ -50,12 +51,12 @@ element: timeline | task | event;
 
 task
     : ID
-    | '(' span ')' string? (option | tag)*
+    | span string? (option | tag)*
     ;
 
 event
     : ID
-    |'(' date ')' string?  (option | tag)*
+    | date string? (option | tag)*
     ;
 
 span

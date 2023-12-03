@@ -34,12 +34,28 @@ export interface Tag {
 }
 
 /**
+ * A date is a string that can be parsed into a date
+ */
+export interface Date {
+    /**
+     * The original date
+     */
+    originalDate: string;
+
+    /**
+     * If the date has been delayed (or advanced), this is the new date
+     */
+    delayedDate?: string;
+}
+
+/**
  * An element of the timeline
  */
 export interface Event {
-    date: string;
+    date: Date;
     label?: string;
     tags?: Tag[];
     options?: Option[];
     timelineId?: string; // TODO: not sure if I should force this
 }
+
