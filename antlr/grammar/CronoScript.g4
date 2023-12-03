@@ -26,6 +26,7 @@ TIMELINE_KW:'timeline';
 DATE:       [0-9][0-9]'/'[0-9][0-9]'/'[0-9][0-9][0-9][0-9];
 
 // Options
+// If you modify those, you must modify the visitor's visitOption and visitTag methods [here](CronoScriptVisitorImpl.ts)
 OPTION:     '#' OPTION_KEY (':' OPTION_KEY)?;
 TAG:        '@' OPTION_KEY;
 OPTION_KEY: [a-zA-Z0-9_/-]+;

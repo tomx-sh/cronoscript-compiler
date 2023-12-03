@@ -3,10 +3,13 @@ import { CronoScriptParser } from './antlr/TSparser/CronoScriptParser';
 import { CharStream, CharStreams, CommonTokenStream } from 'antlr4ts';
 import { CronoScriptVisitorImpl } from './CronoScriptVisitorImpl';
 
+console.clear();
 console.log('🐊 CronoScript compiler\n');
 
 const input: string = `
 #date-format:DD/MM/YYYY
+#color:blue
+#bigTitle
 @Team
 
 "My project" [
@@ -22,5 +25,5 @@ const visitor = new CronoScriptVisitorImpl();
 const result = visitor.visit(tree);
 
 //console.log(tree.toStringTree(parser));
-console.log("RESULT: " + JSON.stringify(result));
+console.log("\nRESULT: " + JSON.stringify(result) + "\n");
 
