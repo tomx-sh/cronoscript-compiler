@@ -32,7 +32,7 @@ CronoScript is based on 3 simple concepts:
 - **Timeline**: A timeline is a group of milestones and tasks.
 
 ## Events
-An event can be describe as simply as a date, written between parenthesis:
+An event can be describe as simply as a date. Dates are always written between parenthesis:
 ```CronoScript
 (01/01/2023)
 ```
@@ -47,7 +47,7 @@ If you want to give it a label, you can write it inside quotes:
 A task is exactly like an event, but with 2 dates, separated by `>`:
 
 ```CronoScript
-(06/06/2023 > 07/07/2023) "Vacations"
+(06/06/2023) > (07/07/2023) "Vacations"
 ```
 
 ## Timelines
@@ -55,7 +55,7 @@ To make a timeline, simply group events and tasks together inside brackets:
 
 ```CronoScript
 [
-    (06/06/2023 > 07/07/2023) "Vacations",
+    (06/06/2023) > (07/07/2023) "Vacations",
     (09/09/2023) "Tom's birthday"
 ]
 ```
@@ -65,7 +65,7 @@ You can also give a title to the timeline by writing it before the elements (don
 
 ```CronoScript
 "Summer" [
-    (06/06/2023 > 07/07/2023) "Vacations",
+    (06/06/2023) > (07/07/2023) "Vacations",
     (09/09/2023) "Tom's birthday"
 ]
 ```
@@ -78,13 +78,13 @@ Timelines can be nested:
 
     "Car project" [
         (01/01/2023) "Buy the car",
-        (01/01/2023 > 02/02/2023) "Fix the car",
+        (01/01/2023) > (02/02/2023) "Fix the car",
         (02/02/2023) "Sell the car"
     ],
 
     "House project" [
         (01/01/2023) "Buy the house",
-        (01/01/2023 > 02/02/2023) "Renovate the house",
+        (01/01/2023) > (02/02/2023) "Renovate the house",
         (02/02/2023) "Sell the house"
     ]
 ]
@@ -93,39 +93,46 @@ Timelines can be nested:
 ## Variables
 You can define variables to store values and reuse them later. Almost everything can be stored in a variable, simply use the appropriate keyword:
 
-* **string** to store a text label:
+### `string`
+To store a text label:
 ```CronoScript
 string description = "Car project"
 ```
-* **date** to store a date:
+
+### `date`
+To store a date:
 ```CronoScript
-date birthday = 09/09/2023
-date lunch = 01/01/2023 12:00
-date rendezvous = monday 5 january 2023 15:00
+date birthday = (09/09/2023)
+date lunch = (01/01/2023 12:00)
+date rendezvous = (monday 5 january 2023 15:00)
+```
+> 💡 Remember, dates are always written between parenthesis!
+
+### `span`
+To store a task's time span:
+```CronoScript
+span taskSpan = (01/01/2023) > (02/02/2023)
 ```
 
-* **span** to store a task's time span:
-```CronoScript
-span taskSpan = (01/01/2023 > 02/02/2023)
-```
-
-* **duration** to store a duration, e.g. `2 days`
+### `duration`
+To store a duration, e.g. `2 days`
 ```CronoScript
 duration taskDuration = 2 days
 duration meetingDuration = 1 hour 30 minutes
 duration projectDuration = 6 months
 ```
 
-* **event**
+### `event`
 ```CronoScript
 event birthday = (01/01/2023) "Tom's birthday"
 ```
-* **task**
+
+### `task`
 ```CronoScript
 task carFix = (01/01/2023 > 02/02/2023) "Fix the car"
 ```
 
-* **timeline**
+### `timeline`
 ```CronoScript
 timeline carProject = "Car project" [
     (01/01/2023) "Buy the car",
