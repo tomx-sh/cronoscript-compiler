@@ -23,9 +23,8 @@ GROUP_KW:   'group';
 DURATION_KW:'duration';
 VAR:        'var';
 
-// Options
-HASH:   '#' ( ~(' '|'\n'|'\r'|'\t'|'#') )+;
-AT:     '@' ( ~(' '|'\n'|'\r'|'\t'|'@') )+;
+
+TAG:   '#' | '@' ( ~(' '|'\n'|'\r'|'\t'|'#'|'@') )+;
 
 // Others
 DATE:       '\'' ( ~('\\'|'\n'|'\r'|'\t'|'\'') )+ '\'';
@@ -37,17 +36,17 @@ COMMENT:    ('//' ~[\r\n]* | '/*' .*? '*/') -> skip;
 WS:         [ \t\r\n]+ -> skip;
 
 // Entry point of the parser
-cronodile: (tags | varDec | date | group)* EOF;
+cronodile: (tag | varDec | date | group)* EOF;
 
 group
     : ID
-    | string? groupBody tags*
-    | groupBody string? tags*
+    | string? groupBody tag*
+    | groupBody string? tag*
     ;
 
 groupBody: '[' (element (separator element)* separator? )? ']';
 
-tags: hash | at;
+tag: TAG;
 
 element
     : ID
@@ -87,7 +86,3 @@ string
     : ID
     | STRING
     ;
-
-hash: HASH;
-
-at: AT;
