@@ -182,25 +182,25 @@ The root groups (the ones that are not contained into other groups) are called t
 ```
 
 ## Variables
-You can define variables to store values and reuse them later. Almost everything can be stored in a variable. To define a variable, use the `let` keyword:
+You can define variables to store values and reuse them later. Almost everything can be stored in a variable. To define a variable, use the `var` keyword:
 
 ```CronoScript
-let myText = "Hello world!"
-let myDate = '01/01/2023'
-let myTask = ['01/01/2023' -> '02/02/2023'] "Write an essay"
+var myText = "Hello world!"
+var myDate = '01/01/2023'
+var myTask = ['01/01/2023' -> '02/02/2023'] "Write an essay"
 ```
 You can specify the type of the variable by using the `:` symbol and the appropriate keyword:
 ```CronoScript
-let myText: string = "Hello world!"
+var myText: string = "Hello world!"
 ```
 > 💡 Most of the time, CronoScript can infer the type of the variable, so you don't need to specify it.
 
-Let's see the different types of variables you can use.
+var's see the different types of variables you can use.
 
 ### `strings`
 To store a text label, tu use as a name for an event, a task or a group:
 ```CronoScript
-let description: string = "Car project"
+var description: string = "Car project"
 ```
 
 ### `date`
@@ -216,18 +216,18 @@ date rendezvous: date = 'monday 5 january 2023 15:00'
 ### `duration`
 To store a duration, e.g. `2 days`, use a `_` character between the number and the unit:
 ```CronoScript
-let taskDuration: duration = 2_days
-let projectDuration = 6_months
+var taskDuration: duration = 2_days
+var projectDuration = 6_months
 ```
 If you need to compose durations, use the `+` operator:
 ```CronoScript
-let taskDuration = 2_days + 4_hours
+var taskDuration = 2_days + 4_hours
 ```
 
 ### `group`
 You can store a whole group in a variable:
 ```CronoScript
-let carProject: group = [
+var carProject: group = [
     '01/01/2023' "Buy the car",
     '02/01/2023' "Bring it home",
     "Fix the car" [
@@ -308,12 +308,12 @@ Of course, you can use this with tasks:
 ```CronoScript
 ['02/01/2023' -> ('14/01/2023'...+ 1_week)] "Delayed task"
 ```
-Lets see what it looks like with variables:
+vars see what it looks like with variables:
 ```CronoScript
-let start = '02/01/2023'
-let end   = '14/01/2023'
-let taskDuration = 1_month
-let delay = 1_week
+var start = '02/01/2023'
+var end   = '14/01/2023'
+var taskDuration = 1_month
+var delay = 1_week
 
 [start -> (end...+ delay)] "Delayed task 1"
 [(start...+delay) ->+ taskDuration] "Delayed task 2"
