@@ -4,29 +4,28 @@ grammar CronoScript;
 // Separators
 COMMA:      ',';
 TO:         '->';
-
-// Operators
-PLUS:       '+';
-MINUS:      '-';
 TOPLUS:     '->+';
 DELAY:      '...';
 DELAYPLUS:  '...+' | '... +' | '..+';
 DELAYMINUS: '...-' | '... -' | '..-';
-EQUALS:     '=';
+
+// Operators
+PLUS:       '+';
+MINUS:      '-';
 MULT:       '*';
 DIV:        '/';
+EQUALS:     '=';
 
 // Keywords
 STRING_KW:  'string';
 DATE_KW:    'date';
 GROUP_KW:   'group';
 DURATION_KW:'duration';
+VAR:        'var';
 
 // Options
-// If you modify those, you must modify the visitor's visitOption and visitTag methods [here](CronoScriptVisitorImpl.ts)
-HASH:   '#' KEY (':' KEY)?;
-AT:     '@' KEY;
-KEY:    [a-zA-Z0-9_/-]+;
+HASH:   '#' ( ~(' '|'\n'|'\r'|'\t'|'#') )+;
+AT:     '@' ( ~(' '|'\n'|'\r'|'\t'|'@') )+;
 
 // Others
 DATE:       '\'' ( ~('\\'|'\n'|'\r'|'\t'|'\'') )+ '\'';
@@ -38,7 +37,7 @@ COMMENT:    ('//' ~[\r\n]* | '/*' .*? '*/') -> skip;
 WS:         [ \t\r\n]+ -> skip;
 
 // Entry point of the parser
-cronodile: (tags | date | group)* EOF;
+cronodile: (tags | varDec | date | group)* EOF;
 
 group
     : ID
@@ -46,7 +45,7 @@ group
     | groupBody string? (tags)*
     ;
 
-groupBody: '[' (element (separator element)*)? ']';
+groupBody: '[' (element (separator element)* separator? )? ']';
 
 tags: hash | at;
 
@@ -62,32 +61,26 @@ separator: COMMA | TO | TOPLUS | DELAY | DELAYPLUS | DELAYMINUS;
 date
     : ID
     | DATE
-    | date PLUS duration
-    | date MINUS duration
     ;
 
 duration
     : ID
     | DURATION
-    | duration MULT INT
-    | INT MULT duration
-    | duration DIV INT
-    | duration PLUS duration
-    | duration MINUS duration
-    | date MINUS date
     ;
 
-// Variables declarations
+operator: PLUS | MINUS | MULT | DIV;
 
-variableDeclaration: type ID EQUALS expression;
-
-type : STRING_KW | DATE_KW | GROUP_KW | DURATION_KW;
+operand: ID | INT | date | duration;
 
 expression
-    : group
-    | date
+    : operand
+    | expression operator expression
+    | '(' expression ')'
     ;
 
+varDec: VAR ID (':' type)? EQUALS (expression | group);
+
+type : STRING_KW | DATE_KW | DURATION_KW | GROUP_KW;
 
 string
     : ID
