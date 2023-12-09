@@ -4,22 +4,21 @@
 import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
 
 import { CronodileContext } from "./CronoScriptParser";
-import { TimelineContext } from "./CronoScriptParser";
+import { GroupContext } from "./CronoScriptParser";
+import { GroupBodyContext } from "./CronoScriptParser";
+import { TagsContext } from "./CronoScriptParser";
 import { ElementContext } from "./CronoScriptParser";
-import { TaskContext } from "./CronoScriptParser";
-import { EventContext } from "./CronoScriptParser";
-import { SpanContext } from "./CronoScriptParser";
+import { SeparatorContext } from "./CronoScriptParser";
 import { DateContext } from "./CronoScriptParser";
-import { SimpleDateContext } from "./CronoScriptParser";
-import { DelayedDateContext } from "./CronoScriptParser";
 import { DurationContext } from "./CronoScriptParser";
-import { TimeUnitContext } from "./CronoScriptParser";
-import { VariableDeclarationContext } from "./CronoScriptParser";
-import { TypeContext } from "./CronoScriptParser";
+import { OperatorContext } from "./CronoScriptParser";
+import { OperandContext } from "./CronoScriptParser";
 import { ExpressionContext } from "./CronoScriptParser";
+import { VarDecContext } from "./CronoScriptParser";
+import { TypeContext } from "./CronoScriptParser";
 import { StringContext } from "./CronoScriptParser";
-import { OptionContext } from "./CronoScriptParser";
-import { TagContext } from "./CronoScriptParser";
+import { HashContext } from "./CronoScriptParser";
+import { AtContext } from "./CronoScriptParser";
 
 
 /**
@@ -39,15 +38,37 @@ export interface CronoScriptListener extends ParseTreeListener {
 	exitCronodile?: (ctx: CronodileContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `CronoScriptParser.timeline`.
+	 * Enter a parse tree produced by `CronoScriptParser.group`.
 	 * @param ctx the parse tree
 	 */
-	enterTimeline?: (ctx: TimelineContext) => void;
+	enterGroup?: (ctx: GroupContext) => void;
 	/**
-	 * Exit a parse tree produced by `CronoScriptParser.timeline`.
+	 * Exit a parse tree produced by `CronoScriptParser.group`.
 	 * @param ctx the parse tree
 	 */
-	exitTimeline?: (ctx: TimelineContext) => void;
+	exitGroup?: (ctx: GroupContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `CronoScriptParser.groupBody`.
+	 * @param ctx the parse tree
+	 */
+	enterGroupBody?: (ctx: GroupBodyContext) => void;
+	/**
+	 * Exit a parse tree produced by `CronoScriptParser.groupBody`.
+	 * @param ctx the parse tree
+	 */
+	exitGroupBody?: (ctx: GroupBodyContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `CronoScriptParser.tags`.
+	 * @param ctx the parse tree
+	 */
+	enterTags?: (ctx: TagsContext) => void;
+	/**
+	 * Exit a parse tree produced by `CronoScriptParser.tags`.
+	 * @param ctx the parse tree
+	 */
+	exitTags?: (ctx: TagsContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `CronoScriptParser.element`.
@@ -61,37 +82,15 @@ export interface CronoScriptListener extends ParseTreeListener {
 	exitElement?: (ctx: ElementContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `CronoScriptParser.task`.
+	 * Enter a parse tree produced by `CronoScriptParser.separator`.
 	 * @param ctx the parse tree
 	 */
-	enterTask?: (ctx: TaskContext) => void;
+	enterSeparator?: (ctx: SeparatorContext) => void;
 	/**
-	 * Exit a parse tree produced by `CronoScriptParser.task`.
+	 * Exit a parse tree produced by `CronoScriptParser.separator`.
 	 * @param ctx the parse tree
 	 */
-	exitTask?: (ctx: TaskContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `CronoScriptParser.event`.
-	 * @param ctx the parse tree
-	 */
-	enterEvent?: (ctx: EventContext) => void;
-	/**
-	 * Exit a parse tree produced by `CronoScriptParser.event`.
-	 * @param ctx the parse tree
-	 */
-	exitEvent?: (ctx: EventContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `CronoScriptParser.span`.
-	 * @param ctx the parse tree
-	 */
-	enterSpan?: (ctx: SpanContext) => void;
-	/**
-	 * Exit a parse tree produced by `CronoScriptParser.span`.
-	 * @param ctx the parse tree
-	 */
-	exitSpan?: (ctx: SpanContext) => void;
+	exitSeparator?: (ctx: SeparatorContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `CronoScriptParser.date`.
@@ -105,28 +104,6 @@ export interface CronoScriptListener extends ParseTreeListener {
 	exitDate?: (ctx: DateContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `CronoScriptParser.simpleDate`.
-	 * @param ctx the parse tree
-	 */
-	enterSimpleDate?: (ctx: SimpleDateContext) => void;
-	/**
-	 * Exit a parse tree produced by `CronoScriptParser.simpleDate`.
-	 * @param ctx the parse tree
-	 */
-	exitSimpleDate?: (ctx: SimpleDateContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `CronoScriptParser.delayedDate`.
-	 * @param ctx the parse tree
-	 */
-	enterDelayedDate?: (ctx: DelayedDateContext) => void;
-	/**
-	 * Exit a parse tree produced by `CronoScriptParser.delayedDate`.
-	 * @param ctx the parse tree
-	 */
-	exitDelayedDate?: (ctx: DelayedDateContext) => void;
-
-	/**
 	 * Enter a parse tree produced by `CronoScriptParser.duration`.
 	 * @param ctx the parse tree
 	 */
@@ -138,37 +115,26 @@ export interface CronoScriptListener extends ParseTreeListener {
 	exitDuration?: (ctx: DurationContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `CronoScriptParser.timeUnit`.
+	 * Enter a parse tree produced by `CronoScriptParser.operator`.
 	 * @param ctx the parse tree
 	 */
-	enterTimeUnit?: (ctx: TimeUnitContext) => void;
+	enterOperator?: (ctx: OperatorContext) => void;
 	/**
-	 * Exit a parse tree produced by `CronoScriptParser.timeUnit`.
+	 * Exit a parse tree produced by `CronoScriptParser.operator`.
 	 * @param ctx the parse tree
 	 */
-	exitTimeUnit?: (ctx: TimeUnitContext) => void;
+	exitOperator?: (ctx: OperatorContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `CronoScriptParser.variableDeclaration`.
+	 * Enter a parse tree produced by `CronoScriptParser.operand`.
 	 * @param ctx the parse tree
 	 */
-	enterVariableDeclaration?: (ctx: VariableDeclarationContext) => void;
+	enterOperand?: (ctx: OperandContext) => void;
 	/**
-	 * Exit a parse tree produced by `CronoScriptParser.variableDeclaration`.
+	 * Exit a parse tree produced by `CronoScriptParser.operand`.
 	 * @param ctx the parse tree
 	 */
-	exitVariableDeclaration?: (ctx: VariableDeclarationContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `CronoScriptParser.type`.
-	 * @param ctx the parse tree
-	 */
-	enterType?: (ctx: TypeContext) => void;
-	/**
-	 * Exit a parse tree produced by `CronoScriptParser.type`.
-	 * @param ctx the parse tree
-	 */
-	exitType?: (ctx: TypeContext) => void;
+	exitOperand?: (ctx: OperandContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `CronoScriptParser.expression`.
@@ -182,6 +148,28 @@ export interface CronoScriptListener extends ParseTreeListener {
 	exitExpression?: (ctx: ExpressionContext) => void;
 
 	/**
+	 * Enter a parse tree produced by `CronoScriptParser.varDec`.
+	 * @param ctx the parse tree
+	 */
+	enterVarDec?: (ctx: VarDecContext) => void;
+	/**
+	 * Exit a parse tree produced by `CronoScriptParser.varDec`.
+	 * @param ctx the parse tree
+	 */
+	exitVarDec?: (ctx: VarDecContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `CronoScriptParser.type`.
+	 * @param ctx the parse tree
+	 */
+	enterType?: (ctx: TypeContext) => void;
+	/**
+	 * Exit a parse tree produced by `CronoScriptParser.type`.
+	 * @param ctx the parse tree
+	 */
+	exitType?: (ctx: TypeContext) => void;
+
+	/**
 	 * Enter a parse tree produced by `CronoScriptParser.string`.
 	 * @param ctx the parse tree
 	 */
@@ -193,25 +181,25 @@ export interface CronoScriptListener extends ParseTreeListener {
 	exitString?: (ctx: StringContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `CronoScriptParser.option`.
+	 * Enter a parse tree produced by `CronoScriptParser.hash`.
 	 * @param ctx the parse tree
 	 */
-	enterOption?: (ctx: OptionContext) => void;
+	enterHash?: (ctx: HashContext) => void;
 	/**
-	 * Exit a parse tree produced by `CronoScriptParser.option`.
+	 * Exit a parse tree produced by `CronoScriptParser.hash`.
 	 * @param ctx the parse tree
 	 */
-	exitOption?: (ctx: OptionContext) => void;
+	exitHash?: (ctx: HashContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `CronoScriptParser.tag`.
+	 * Enter a parse tree produced by `CronoScriptParser.at`.
 	 * @param ctx the parse tree
 	 */
-	enterTag?: (ctx: TagContext) => void;
+	enterAt?: (ctx: AtContext) => void;
 	/**
-	 * Exit a parse tree produced by `CronoScriptParser.tag`.
+	 * Exit a parse tree produced by `CronoScriptParser.at`.
 	 * @param ctx the parse tree
 	 */
-	exitTag?: (ctx: TagContext) => void;
+	exitAt?: (ctx: AtContext) => void;
 }
 

@@ -112,25 +112,25 @@ public class CronoScriptBaseListener implements CronoScriptListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVariableDeclaration(CronoScriptParser.VariableDeclarationContext ctx) { }
+	@Override public void enterOperator(CronoScriptParser.OperatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVariableDeclaration(CronoScriptParser.VariableDeclarationContext ctx) { }
+	@Override public void exitOperator(CronoScriptParser.OperatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterType(CronoScriptParser.TypeContext ctx) { }
+	@Override public void enterOperand(CronoScriptParser.OperandContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitType(CronoScriptParser.TypeContext ctx) { }
+	@Override public void exitOperand(CronoScriptParser.OperandContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -143,6 +143,30 @@ public class CronoScriptBaseListener implements CronoScriptListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExpression(CronoScriptParser.ExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVarDec(CronoScriptParser.VarDecContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVarDec(CronoScriptParser.VarDecContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterType(CronoScriptParser.TypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitType(CronoScriptParser.TypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

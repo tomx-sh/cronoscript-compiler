@@ -4,22 +4,21 @@
 import { ParseTreeVisitor } from "antlr4ts/tree/ParseTreeVisitor";
 
 import { CronodileContext } from "./CronoScriptParser";
-import { TimelineContext } from "./CronoScriptParser";
+import { GroupContext } from "./CronoScriptParser";
+import { GroupBodyContext } from "./CronoScriptParser";
+import { TagsContext } from "./CronoScriptParser";
 import { ElementContext } from "./CronoScriptParser";
-import { TaskContext } from "./CronoScriptParser";
-import { EventContext } from "./CronoScriptParser";
-import { SpanContext } from "./CronoScriptParser";
+import { SeparatorContext } from "./CronoScriptParser";
 import { DateContext } from "./CronoScriptParser";
-import { SimpleDateContext } from "./CronoScriptParser";
-import { DelayedDateContext } from "./CronoScriptParser";
 import { DurationContext } from "./CronoScriptParser";
-import { TimeUnitContext } from "./CronoScriptParser";
-import { VariableDeclarationContext } from "./CronoScriptParser";
-import { TypeContext } from "./CronoScriptParser";
+import { OperatorContext } from "./CronoScriptParser";
+import { OperandContext } from "./CronoScriptParser";
 import { ExpressionContext } from "./CronoScriptParser";
+import { VarDecContext } from "./CronoScriptParser";
+import { TypeContext } from "./CronoScriptParser";
 import { StringContext } from "./CronoScriptParser";
-import { OptionContext } from "./CronoScriptParser";
-import { TagContext } from "./CronoScriptParser";
+import { HashContext } from "./CronoScriptParser";
+import { AtContext } from "./CronoScriptParser";
 
 
 /**
@@ -38,11 +37,25 @@ export interface CronoScriptVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitCronodile?: (ctx: CronodileContext) => Result;
 
 	/**
-	 * Visit a parse tree produced by `CronoScriptParser.timeline`.
+	 * Visit a parse tree produced by `CronoScriptParser.group`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	visitTimeline?: (ctx: TimelineContext) => Result;
+	visitGroup?: (ctx: GroupContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `CronoScriptParser.groupBody`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitGroupBody?: (ctx: GroupBodyContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `CronoScriptParser.tags`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitTags?: (ctx: TagsContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `CronoScriptParser.element`.
@@ -52,25 +65,11 @@ export interface CronoScriptVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitElement?: (ctx: ElementContext) => Result;
 
 	/**
-	 * Visit a parse tree produced by `CronoScriptParser.task`.
+	 * Visit a parse tree produced by `CronoScriptParser.separator`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	visitTask?: (ctx: TaskContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `CronoScriptParser.event`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitEvent?: (ctx: EventContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `CronoScriptParser.span`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitSpan?: (ctx: SpanContext) => Result;
+	visitSeparator?: (ctx: SeparatorContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `CronoScriptParser.date`.
@@ -80,20 +79,6 @@ export interface CronoScriptVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitDate?: (ctx: DateContext) => Result;
 
 	/**
-	 * Visit a parse tree produced by `CronoScriptParser.simpleDate`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitSimpleDate?: (ctx: SimpleDateContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `CronoScriptParser.delayedDate`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitDelayedDate?: (ctx: DelayedDateContext) => Result;
-
-	/**
 	 * Visit a parse tree produced by `CronoScriptParser.duration`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -101,25 +86,18 @@ export interface CronoScriptVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitDuration?: (ctx: DurationContext) => Result;
 
 	/**
-	 * Visit a parse tree produced by `CronoScriptParser.timeUnit`.
+	 * Visit a parse tree produced by `CronoScriptParser.operator`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	visitTimeUnit?: (ctx: TimeUnitContext) => Result;
+	visitOperator?: (ctx: OperatorContext) => Result;
 
 	/**
-	 * Visit a parse tree produced by `CronoScriptParser.variableDeclaration`.
+	 * Visit a parse tree produced by `CronoScriptParser.operand`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	visitVariableDeclaration?: (ctx: VariableDeclarationContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `CronoScriptParser.type`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitType?: (ctx: TypeContext) => Result;
+	visitOperand?: (ctx: OperandContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `CronoScriptParser.expression`.
@@ -129,6 +107,20 @@ export interface CronoScriptVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitExpression?: (ctx: ExpressionContext) => Result;
 
 	/**
+	 * Visit a parse tree produced by `CronoScriptParser.varDec`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitVarDec?: (ctx: VarDecContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `CronoScriptParser.type`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitType?: (ctx: TypeContext) => Result;
+
+	/**
 	 * Visit a parse tree produced by `CronoScriptParser.string`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -136,17 +128,17 @@ export interface CronoScriptVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitString?: (ctx: StringContext) => Result;
 
 	/**
-	 * Visit a parse tree produced by `CronoScriptParser.option`.
+	 * Visit a parse tree produced by `CronoScriptParser.hash`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	visitOption?: (ctx: OptionContext) => Result;
+	visitHash?: (ctx: HashContext) => Result;
 
 	/**
-	 * Visit a parse tree produced by `CronoScriptParser.tag`.
+	 * Visit a parse tree produced by `CronoScriptParser.at`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	visitTag?: (ctx: TagContext) => Result;
+	visitAt?: (ctx: AtContext) => Result;
 }
 
