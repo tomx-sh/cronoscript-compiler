@@ -6,4 +6,5 @@ source ./config.sh
 
 cd ../javaParser
 echo "Running grun..."
+java -cp ".:$ANTLR_JAR" org.antlr.v4.gui.TestRig $GRAMMAR_NAME $RULE_NAME -tokens $INPUT_FILE
 java -cp ".:$ANTLR_JAR" org.antlr.v4.gui.TestRig $GRAMMAR_NAME $RULE_NAME -gui $INPUT_FILE
