@@ -41,8 +41,8 @@ cronodile: (tags | varDec | date | group)* EOF;
 
 group
     : ID
-    | string? groupBody (tags)*
-    | groupBody string? (tags)*
+    | string? groupBody tags*
+    | groupBody string? tags*
     ;
 
 groupBody: '[' (element (separator element)* separator? )? ']';
@@ -54,6 +54,7 @@ element
     | group
     | date
     | duration
+    | expression
     ;
 
 separator: COMMA | TO | TOPLUS | DELAY | DELAYPLUS | DELAYMINUS;

@@ -1,3 +1,1 @@
-var myVariable = 10 + 10
-
-var myDate = '01/01/2023' + 2_days
+['02/01/2023'...('02/01/2023' + 1_day)] "Delayed event"
