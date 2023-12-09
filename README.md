@@ -306,8 +306,10 @@ In the example above, the dates before and after the `...` operator are the same
 ```
 Of course, you can use this with tasks:
 ```CronoScript
-['02/01/2023' -> ('14/01/2023'...+ 1_week)] "Delayed task"
+['02/01/2023' -> ['14/01/2023'...+ 1_week]] "Delayed task"
 ```
+> 💡 Remember, a delayed date is a special group of 2 dates. So you must place them inside brackets.
+
 vars see what it looks like with variables:
 ```CronoScript
 var start = '02/01/2023'
@@ -315,8 +317,8 @@ var end   = '14/01/2023'
 var taskDuration = 1_month
 var delay = 1_week
 
-[start -> (end...+ delay)] "Delayed task 1"
-[(start...+delay) ->+ taskDuration] "Delayed task 2"
+[start -> [end...+ delay]] "Delayed task 1"
+[[start...+delay] ->+ taskDuration] "Delayed task 2"
 ```
 
 
