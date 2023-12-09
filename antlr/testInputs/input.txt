@@ -1,6 +1,7 @@
-#date-format:DD/MM/YYYY
-@Team
+['01/01/2023' -> '01/01/2023'] "My Task" #color:blue @tag1
 
-"My project" [
-    (01/01/2023) "Hello" #color:blue #font-size:14px @Tom
+"My Project" [
+    ['01/01/2023' -> '01/01/2023'] "Task2" #color:blue @tag1
+    ->
+    ['01/01/2023'] "Event 1" #color:red,
 ]

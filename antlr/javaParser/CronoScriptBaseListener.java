@@ -28,13 +28,37 @@ public class CronoScriptBaseListener implements CronoScriptListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTimeline(CronoScriptParser.TimelineContext ctx) { }
+	@Override public void enterGroup(CronoScriptParser.GroupContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTimeline(CronoScriptParser.TimelineContext ctx) { }
+	@Override public void exitGroup(CronoScriptParser.GroupContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterGroupBody(CronoScriptParser.GroupBodyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitGroupBody(CronoScriptParser.GroupBodyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTags(CronoScriptParser.TagsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTags(CronoScriptParser.TagsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -52,37 +76,13 @@ public class CronoScriptBaseListener implements CronoScriptListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTask(CronoScriptParser.TaskContext ctx) { }
+	@Override public void enterSeparator(CronoScriptParser.SeparatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTask(CronoScriptParser.TaskContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterEvent(CronoScriptParser.EventContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitEvent(CronoScriptParser.EventContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterSpan(CronoScriptParser.SpanContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitSpan(CronoScriptParser.SpanContext ctx) { }
+	@Override public void exitSeparator(CronoScriptParser.SeparatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -100,30 +100,6 @@ public class CronoScriptBaseListener implements CronoScriptListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSimpleDate(CronoScriptParser.SimpleDateContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitSimpleDate(CronoScriptParser.SimpleDateContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterDelayedDate(CronoScriptParser.DelayedDateContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDelayedDate(CronoScriptParser.DelayedDateContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterDuration(CronoScriptParser.DurationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -131,18 +107,6 @@ public class CronoScriptBaseListener implements CronoScriptListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDuration(CronoScriptParser.DurationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterTimeUnit(CronoScriptParser.TimeUnitContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTimeUnit(CronoScriptParser.TimeUnitContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -196,25 +160,25 @@ public class CronoScriptBaseListener implements CronoScriptListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterOption(CronoScriptParser.OptionContext ctx) { }
+	@Override public void enterHash(CronoScriptParser.HashContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitOption(CronoScriptParser.OptionContext ctx) { }
+	@Override public void exitHash(CronoScriptParser.HashContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTag(CronoScriptParser.TagContext ctx) { }
+	@Override public void enterAt(CronoScriptParser.AtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTag(CronoScriptParser.TagContext ctx) { }
+	@Override public void exitAt(CronoScriptParser.AtContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
