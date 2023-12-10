@@ -6,19 +6,7 @@ import { CronoScriptVisitorImpl } from './CronoScriptVisitorImpl';
 console.clear();
 console.log('🐊 CronoScript compiler\n');
 
-const input: string = `
-#date-format:DD/MM/YYYY
-#color:blue
-#bigTitle
-@Team
-
-(01/01/2023)...(01/02/2023) "My event" #color:red #font-size:12px @Tom @Team
-(01/01/2023) > (01/02/2023) "My task" #color:green #font-size:12px @Tom @Team
-
-"My project" [
-    (01/01/2023) "Hello" #color:blue #font-size:14px @Tom
-]
-`;
+const input: string = `['01/01/2023'] "Hello"`;
 const inputStream: CharStream = CharStreams.fromString(input);
 const lexer: CronoScriptLexer = new CronoScriptLexer(inputStream);
 const tokenStream: CommonTokenStream = new CommonTokenStream(lexer);
