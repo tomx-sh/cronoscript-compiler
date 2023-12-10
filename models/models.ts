@@ -2,17 +2,32 @@
  * This object is the final result of the parsing process
  */
 export interface Cronodile {
-    options?: Option[];
     tags?: Tag[];
-    events?: Event[];
+
+    /**
+     * An array of groups.The groups are flat, they are not nested.
+     * The groups hyerarchy is defined by the `groupsIds` property of each group.
+     */
+    groups?: Group[];
+
+    /**
+     * An array of dateAtoms.
+     */
+    dateAtoms?: dateAtom[];
 }
+
 /**
  * An option that can be set for an element, or the whole document
- * It is derived from a notation like `#color:blue`
+ * @example `#color:blue` `@Thomas`
  */
-export interface Option {
+export interface Tag {
     /**
-     * The key of the option, written after the `#` symbol
+     * The symbol of the tag, like `#` or `@`
+     */
+    symbol: string;
+
+    /**
+     * The key of the option, written after the `#` or `@` symbol
      */
     key: string;
 
@@ -22,40 +37,57 @@ export interface Option {
     value?: string;
 }
 
+
 /**
- * A tag that can be set for an element, or the whole document
- * It is derived from a notation like `@Team`
+ * Common properties for elements that go in a group:
+ * dateAtoms and other groups.
  */
-export interface Tag {
+export interface LinkedElement {
     /**
-     * The name of the tag, written after the `@` symbol
+     * The id of the element
      */
-    value: string;
+    id: string;
+
+    /**
+     * The order of the element in the group
+     */
+    order: number;
+
+    /**
+     * The id of the element to which it is delayed
+     * @example `'01/01/2023'...'01/01/2024'` or `'group1'...'group2'`
+     */
+    delayedTo?: string;
+
+    /**
+     * The id of the element to which it is linked.
+     * The link is oriented; one element can be linked to another, but not the other way around.
+     * @example `'01/01/2023'->'01/01/2024'` or `'group1'->'group2'`
+     */
+    linkedTo?: string;
 }
 
 /**
- * A date is a string that can be parsed into a date
+ * A date, which is the most basic element of a group
  */
-export interface Date {
-    /**
-     * The original date
-     */
-    originalDate: string;
-
-    /**
-     * If the date has been delayed (or advanced), this is the new date
-     */
-    delayedDate?: string;
-}
-
-/**
- * An element of the timeline
- */
-export interface Event {
+export interface dateAtom extends LinkedElement {
     date: Date;
-    label?: string;
-    tags?: Tag[];
-    options?: Option[];
-    timelineId?: string; // TODO: not sure if I should force this
 }
 
+/**
+ * A group of dateAtoms and other groups
+ */
+export interface Group extends LinkedElement {
+    name: string;
+    tags?: Tag[];
+    /**
+     * The ids of the children of the group.
+     * The children can be dateAtoms or other groups.
+     */
+    childrenIds?: string[];
+}
+
+
+export interface Duration {
+    millis: number;
+}

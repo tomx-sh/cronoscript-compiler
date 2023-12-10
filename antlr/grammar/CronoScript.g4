@@ -12,8 +12,8 @@ DELAYMINUS: '...-' | '... -' | '..-';
 // Operators
 PLUS:       '+';
 MINUS:      '-';
-MULT:       '*';
-DIV:        '/';
+STAR:       '*';
+SLASH:        '/';
 EQUALS:     '=';
 
 // Keywords
@@ -23,13 +23,11 @@ GROUP_KW:   'group';
 DURATION_KW:'duration';
 VAR:        'var';
 
-
-TAG:   '#' | '@' ( ~(' '|'\n'|'\r'|'\t'|'#'|'@') )+;
-
 // Others
 DATE:       '\'' ( ~('\\'|'\n'|'\r'|'\t'|'\'') )+ '\'';
 STRING:     '"' ( ~('\\'|'\n'|'\r'|'"') )* '"';
-DURATION:   INT '_' ID; // 3_days
+DURATION:   INT '_' ID;
+TAG:        '#' | '@' ( ~(' '|'\n'|'\r'|'\t'|'#'|'@') )+;
 ID:         [a-zA-Z_][a-zA-Z_0-9]*;
 INT:        [0-9]+;
 COMMENT:    ('//' ~[\r\n]* | '/*' .*? '*/') -> skip;
@@ -68,7 +66,7 @@ duration
     | DURATION
     ;
 
-operator: PLUS | MINUS | MULT | DIV;
+operator: PLUS | MINUS | STAR | SLASH;
 
 operand: ID | INT | date | duration;
 

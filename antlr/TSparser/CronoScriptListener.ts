@@ -6,7 +6,7 @@ import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
 import { CronodileContext } from "./CronoScriptParser";
 import { GroupContext } from "./CronoScriptParser";
 import { GroupBodyContext } from "./CronoScriptParser";
-import { TagsContext } from "./CronoScriptParser";
+import { TagContext } from "./CronoScriptParser";
 import { ElementContext } from "./CronoScriptParser";
 import { SeparatorContext } from "./CronoScriptParser";
 import { DateContext } from "./CronoScriptParser";
@@ -17,8 +17,6 @@ import { ExpressionContext } from "./CronoScriptParser";
 import { VarDecContext } from "./CronoScriptParser";
 import { TypeContext } from "./CronoScriptParser";
 import { StringContext } from "./CronoScriptParser";
-import { HashContext } from "./CronoScriptParser";
-import { AtContext } from "./CronoScriptParser";
 
 
 /**
@@ -60,15 +58,15 @@ export interface CronoScriptListener extends ParseTreeListener {
 	exitGroupBody?: (ctx: GroupBodyContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `CronoScriptParser.tags`.
+	 * Enter a parse tree produced by `CronoScriptParser.tag`.
 	 * @param ctx the parse tree
 	 */
-	enterTags?: (ctx: TagsContext) => void;
+	enterTag?: (ctx: TagContext) => void;
 	/**
-	 * Exit a parse tree produced by `CronoScriptParser.tags`.
+	 * Exit a parse tree produced by `CronoScriptParser.tag`.
 	 * @param ctx the parse tree
 	 */
-	exitTags?: (ctx: TagsContext) => void;
+	exitTag?: (ctx: TagContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `CronoScriptParser.element`.
@@ -179,27 +177,5 @@ export interface CronoScriptListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitString?: (ctx: StringContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `CronoScriptParser.hash`.
-	 * @param ctx the parse tree
-	 */
-	enterHash?: (ctx: HashContext) => void;
-	/**
-	 * Exit a parse tree produced by `CronoScriptParser.hash`.
-	 * @param ctx the parse tree
-	 */
-	exitHash?: (ctx: HashContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `CronoScriptParser.at`.
-	 * @param ctx the parse tree
-	 */
-	enterAt?: (ctx: AtContext) => void;
-	/**
-	 * Exit a parse tree produced by `CronoScriptParser.at`.
-	 * @param ctx the parse tree
-	 */
-	exitAt?: (ctx: AtContext) => void;
 }
 
