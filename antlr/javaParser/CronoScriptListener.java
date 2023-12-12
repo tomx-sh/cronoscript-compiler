@@ -37,15 +37,15 @@ public interface CronoScriptListener extends ParseTreeListener {
 	 */
 	void exitGroupBody(CronoScriptParser.GroupBodyContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CronoScriptParser#tags}.
+	 * Enter a parse tree produced by {@link CronoScriptParser#tag}.
 	 * @param ctx the parse tree
 	 */
-	void enterTags(CronoScriptParser.TagsContext ctx);
+	void enterTag(CronoScriptParser.TagContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CronoScriptParser#tags}.
+	 * Exit a parse tree produced by {@link CronoScriptParser#tag}.
 	 * @param ctx the parse tree
 	 */
-	void exitTags(CronoScriptParser.TagsContext ctx);
+	void exitTag(CronoScriptParser.TagContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CronoScriptParser#element}.
 	 * @param ctx the parse tree
@@ -146,24 +146,4 @@ public interface CronoScriptListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitString(CronoScriptParser.StringContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CronoScriptParser#hash}.
-	 * @param ctx the parse tree
-	 */
-	void enterHash(CronoScriptParser.HashContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CronoScriptParser#hash}.
-	 * @param ctx the parse tree
-	 */
-	void exitHash(CronoScriptParser.HashContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CronoScriptParser#at}.
-	 * @param ctx the parse tree
-	 */
-	void enterAt(CronoScriptParser.AtContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CronoScriptParser#at}.
-	 * @param ctx the parse tree
-	 */
-	void exitAt(CronoScriptParser.AtContext ctx);
 }

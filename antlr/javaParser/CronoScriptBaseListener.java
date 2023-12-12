@@ -52,13 +52,13 @@ public class CronoScriptBaseListener implements CronoScriptListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTags(CronoScriptParser.TagsContext ctx) { }
+	@Override public void enterTag(CronoScriptParser.TagContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTags(CronoScriptParser.TagsContext ctx) { }
+	@Override public void exitTag(CronoScriptParser.TagContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -179,30 +179,6 @@ public class CronoScriptBaseListener implements CronoScriptListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitString(CronoScriptParser.StringContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterHash(CronoScriptParser.HashContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitHash(CronoScriptParser.HashContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterAt(CronoScriptParser.AtContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAt(CronoScriptParser.AtContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

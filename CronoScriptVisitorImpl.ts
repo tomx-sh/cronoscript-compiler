@@ -28,7 +28,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         ctx.date().forEach((date, index) => {
             const dateObject = this.visitDate(date);
             if (dateObject) {
-                dates.push({...dateObject, id: `d0.${index}`,order: index});
+                dates.push({...dateObject, id: `d0${index}`,order: index});
             }
         });
         cronodile.dateAtoms = dates;
