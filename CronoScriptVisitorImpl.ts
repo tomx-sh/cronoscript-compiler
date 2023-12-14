@@ -23,7 +23,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         if (tags.length > 0) cronodile.tags = tags;
 
 
-        // Looking for lonely dates
+        // Looking for lonely dates (top level)
         const dates: model.dateAtom[] = [];
         ctx.date().forEach((date, index) => {
             const dateObject = this.visitDate(date);
@@ -33,32 +33,44 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         });
         cronodile.dateAtoms = dates;
 
-        // Looking for groups
+        // Looking for groups (top level)
+        // But they contain all their family (dates and groups) as children
+        // We will extract them
         const groups: model.Group[] = [];
         ctx.group().forEach((group, index) => {
+
+            this.hierarchicalContext.enterGroup(index);
             let groupObject = this.visitGroup(group);
+            this.hierarchicalContext.leaveGroup();
+
             if (!groupObject) {
                 console.warn(`Group ${group.text} is not valid`);
                 return;
             }
 
-            // Put dateAtoms into the cronodile
+            // Set the order of the group
+            groupObject.mainGroup.order = index;
+
+            // Put the group intself into the cronodile
+            groups.push(groupObject.mainGroup);
+
+            // Put the children of the group into the cronodile:
+            // 1. Groups
             if (groupObject.children) {
+                let childIndexForGroups = 0;
                 groupObject.children.forEach(child => {
-                    if (child.type == "dateAtom") {
-                        cronodile.dateAtoms!.push(child.object);
+                    if (child.type == "group") {
+                        groups.push(child.object);
+                        childIndexForGroups++;
                     }
                 });
             }
 
-            // Put the group intself into the cronodile
-            groups.push({...groupObject.mainGroup, id: `g0.${index}`});
-
-            // Put the children of the group into the cronodile
+            // 2. dateAtoms
             if (groupObject.children) {
-                groupObject.children.forEach(child => {
-                    if (child.type == "group") {
-                        groups.push(child.object);
+                groupObject.children.forEach((child) => {
+                    if (child.type == "dateAtom") {
+                        cronodile.dateAtoms!.push(child.object);
                     }
                 });
             }
@@ -122,6 +134,8 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
     }
 
 
+    private hierarchicalContext = new HierarchicalContext();
+
     visitGroup(ctx: parser.GroupContext)
         :{
             mainGroup: model.Group,
@@ -132,13 +146,13 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         const text = ctx.text;
 
         let mainGroup: model.Group = {
-            id:     "g", // Will be set by the caller
+            id:     this.hierarchicalContext.getCurrentId(),
             order:  0,       // Will be set by the caller
             name:   "",
             // tags and childrenIds will be set below
         };
 
-        // Process parent group
+        // Process main group
         if (ctx.ID()) {
             // TODO: handle the case where the group is an ID ; browse the variable map to find the group
             console.debug(`Group ${ctx.ID()!.text} is an ID`);
@@ -160,9 +174,8 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         if (tags.length > 0) mainGroup.tags = tags;
 
 
+        // Process direct children
 
-
-        // Process children
         const groupBody = ctx.groupBody();
         if (!groupBody) {
             console.warn(`Group ${text} has no body`);
@@ -174,17 +187,6 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
             console.warn(`Group ${text} has no valid children`);
             return {mainGroup, children: undefined};
         }
-
-        // Set order and append index (without counting separators) to the id of dateAtoms and groups
-        let indexWithoutSeparators = 0;
-        children.forEach(child => {
-            if (child.type == "dateAtom" || child.type == "group") {
-                const parentDepth = mainGroup.id.substring(1); // substring to remove the 'g'
-                child.object.id += `.${parentDepth}.${indexWithoutSeparators}`;
-                child.object.order = indexWithoutSeparators;
-                indexWithoutSeparators++;
-            }
-        });
 
         // Set `delayedTo` when there's a DELAY `...` separator
         children.forEach((child, index) => {
@@ -351,9 +353,11 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
             }
         }).filter(child => child != null) as ({type: "dateAtom", object: model.dateAtom} | {type: "group", object: model.Group})[];
 
-
         return {mainGroup, children: childrenResult};
     }
+
+
+
 
 
     visitGroupBody(ctx: parser.GroupBodyContext)
@@ -368,27 +372,43 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
             return null;
         }
 
+        // This array will contain the children of the group and will be returned
         const children: ({type: "dateAtom",  object: model.dateAtom}
                         |{type: "group",     object: model.Group, children?: ({type: "dateAtom", object: model.dateAtom} | {type: "group", object: model.Group})[]}
                         |{type: "duration",  object: model.Duration}
                         |{type: "separator", object:string})[] = [];
 
-        // First, fill the children array
-        ctx.children?.forEach((child, index) => {
+        // Let's browse the children of the group and put them in the children array
 
-            // Element
+        // Used to set the `order` property of dateAtoms and groups :
+        let indexWithoutSeparators = 0;
+        // The order is a different information than the content of the id
+        // The id only counts the same type of elements (dateAtoms or groups)
+        // The order counts all the elements (dateAtoms and groups)
+
+        ctx.children?.forEach(child => {
+
+            // Elements other than separators
             if (child instanceof parser.ElementContext) {
+
+                this.hierarchicalContext.enterGroup(indexWithoutSeparators);
                 const element = this.visitElement(child);
+                this.hierarchicalContext.leaveGroup();
+
                 if (element) {
 
                     if (element.type == "group") {
                         const group = element.object;
+                        group.order = indexWithoutSeparators;
                         const groupChildren = element.children;
                         children.push({type: "group", object: group, children: groupChildren});
+                        indexWithoutSeparators++;
 
                     } else if (element.type == "dateAtom") {
                         const dateAtom = element.object;
+                        dateAtom.order = indexWithoutSeparators;
                         children.push({type: "dateAtom", object: dateAtom});
+                        indexWithoutSeparators++;
 
                     } else if (element.type == "duration") {
                         const duration = element.object;
@@ -402,7 +422,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                     }
                 }
 
-            // Separator
+            // Separators
             } else if (child instanceof parser.SeparatorContext) {
                 const separator = this.visitSeparator(child);
                 if (separator) {
@@ -733,5 +753,26 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
             return "DELAYMINUS";
         }
         return null;
+    }
+}
+
+
+/**
+ * This class is used to keep track of the current path in the tree
+ * It is used to compute the id of each element
+ */
+class HierarchicalContext {
+    private path: number[] = [];
+
+    enterGroup(index: number) {
+        this.path.push(index);
+    }
+
+    leaveGroup() {
+        this.path.pop();
+    }
+
+    getCurrentId(): string {
+        return this.path.join('.');
     }
 }

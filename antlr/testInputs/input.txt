@@ -1,4 +1,36 @@
 [
-    ['01/01/2023'] "Hello",
-    ['02/02/2023'] "World"
-] "Group"
+    [] "0.0",
+    [] "0.1"
+] "0"
+
+[
+    [] "1.0",
+    [   '01/01/2023',
+        [
+            [] "1.1.0.0",
+            [] "1.1.0.1"
+        ] "1.1.0",
+        '02/02/2023',
+        [
+            [] "1.1.1.0",
+            [] "1.1.1.1",
+            [] "1.1.1.2"
+        ] "1.1.1"
+    ] "1.1"
+] "1"
+
+
+/*
+Réfléchir dans l'ordre
+Comment on découvre un groupe pour la première fois ?
+1. Dans le corps du script
+2. Dans un GroupBody
+-> Id = l'ordre d'apparition
+
+Ensuite, dans visitGroup qui a appelé le groupBody,
+On append aux enfants l'id du parent
+Oui mais on le connaît pas
+
+
+
+*/
