@@ -610,9 +610,6 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                 return null;
             }
 
-
-
-
             const left =  this.visitExpression(ctx.expression(0)!);
             const right = this.visitExpression(ctx.expression(1)!);
 
