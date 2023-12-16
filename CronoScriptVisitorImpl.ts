@@ -594,12 +594,25 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
             }
         }
 
+        if (ctx.expression()) {
+            const expression = this.visitExpression(ctx.expression(0)!);
+            if (expression) {
+                return expression;
+            } else {
+                return null;
+            }
+        }
+
         if (ctx.operator()) {
             const operator = this.visitOperator(ctx.operator()!);
             if (!operator) {
                 console.warn(`Operator ${ctx.operator()!.text} is not valid`);
                 return null;
             }
+
+
+
+
             const left =  this.visitExpression(ctx.expression(0)!);
             const right = this.visitExpression(ctx.expression(1)!);
 
