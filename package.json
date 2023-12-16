@@ -1,4 +1,7 @@
 {
+	"name": "cronoscript",
+	"version": "1.0.0",
+	"license": "UNLICENSED",
 	"scripts": {
 		"build": "pnpm run makeTsParser && tsc",
 		"makeTsParser": "cd ./antlr/grammar && antlr4ts -Dlanguage=TypeScript -visitor CronoScript.g4 -o ../TSparser",

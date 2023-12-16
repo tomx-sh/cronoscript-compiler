@@ -5,6 +5,9 @@ import * as model from './models/models';
 import { parseDuration } from "./models/utils";
 
 export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implements CronoScriptVisitor<any> {
+
+    private hierarchicalContext = new HierarchicalContext();
+    
     defaultResult() {
         console.warn("Default result called");
         return null;
@@ -26,9 +29,14 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         // Looking for lonely dates (top level)
         const dates: model.dateAtom[] = [];
         ctx.date().forEach((date, index) => {
+
+            this.hierarchicalContext.enterGroup(index);
             const dateObject = this.visitDate(date);
+            this.hierarchicalContext.leaveGroup();
+
+            const id = this.hierarchicalContext.getCurrentId();
             if (dateObject) {
-                dates.push({...dateObject, id: `d0${index}`,order: index});
+                dates.push({...dateObject, id: id,order: index});
             }
         });
         cronodile.dateAtoms = dates;
@@ -123,7 +131,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                 return null;
             } else {
                 return {
-                    id: "d", // Will be set by the caller
+                    id: this.hierarchicalContext.getCurrentId(),
                     order: 0,    // Will be set by the caller
                     date: date
                 };
@@ -132,9 +140,6 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         
         return null;
     }
-
-
-    private hierarchicalContext = new HierarchicalContext();
 
     visitGroup(ctx: parser.GroupContext)
         :{
