@@ -7,7 +7,7 @@ import { parseDuration } from "./models/utils";
 export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implements CronoScriptVisitor<any> {
 
     private hierarchicalContext = new HierarchicalContext();
-    
+
     defaultResult() {
         console.warn("Default result called");
         return null;
@@ -34,9 +34,9 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
             const dateObject = this.visitDate(date);
             this.hierarchicalContext.leaveGroup();
 
-            const id = this.hierarchicalContext.getCurrentId();
+            //const id = this.hierarchicalContext.getCurrentId();
             if (dateObject) {
-                dates.push({...dateObject, id: id,order: index});
+                dates.push({...dateObject,order: index});
             }
         });
         cronodile.dateAtoms = dates;
@@ -243,11 +243,14 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                         delayDate = new Date(leftDate.getTime() - duration);
                     }
 
+                    this.hierarchicalContext.enterGroup(index);
                     const dateAtom: model.dateAtom = {
-                        id: (left.object as model.dateAtom | model.Group).id + ".delay",
+                        //id: (left.object as model.dateAtom | model.Group).id + ".delay",
+                        id: this.hierarchicalContext.getCurrentId(),
                         order: 0,           // Will be set later
                         date: delayDate
                     };
+                    this.hierarchicalContext.leaveGroup();
 
                     // Replace the duration by the dateAtom
                     children![index + 1] = {type: "dateAtom", object: dateAtom};
@@ -305,11 +308,14 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                     let linkedDate: Date;
                     linkedDate = new Date(leftDate.getTime() + duration);
 
+                    this.hierarchicalContext.enterGroup(index);
                     const dateAtom: model.dateAtom = {
-                        id: (left.object as model.dateAtom | model.Group).id + ".link",
+                        //id: (left.object as model.dateAtom | model.Group).id + ".link",
+                        id: this.hierarchicalContext.getCurrentId(),
                         order: 0,           // Will be set later
                         date: linkedDate
                     };
+                    this.hierarchicalContext.leaveGroup();
 
                     // Replace the duration by the dateAtom
                     children![index + 1] = {type: "dateAtom", object: dateAtom};
