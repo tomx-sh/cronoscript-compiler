@@ -113,7 +113,6 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
 
     visitDate(ctx: parser.DateContext): model.dateAtom | null {
         const dateText = ctx.text;
-        console.debug(`Computing date: ${dateText}`);
 
         if (ctx.ID()) {
             console.debug(`Date ${dateText} is an ID`);
@@ -122,7 +121,6 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         }
         
         if (ctx.DATE()) {
-            console.debug(`Date ${dateText} is a literal date`);
             const dateContent = dateText.substring(1, dateText.length - 1); // substring to remove the single quotes
             const date = new Date(dateContent); // TODO: implement a better date parser
 
@@ -243,7 +241,8 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                         delayDate = new Date(leftDate.getTime() - duration);
                     }
 
-                    this.hierarchicalContext.enterGroup(index);
+                    // The duration will be replaced by a dateAtom
+                    this.hierarchicalContext.enterGroup(index); 
                     const dateAtom: model.dateAtom = {
                         //id: (left.object as model.dateAtom | model.Group).id + ".delay",
                         id: this.hierarchicalContext.getCurrentId(),
@@ -406,32 +405,39 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                 const element = this.visitElement(child);
                 this.hierarchicalContext.leaveGroup();
 
-                if (element) {
+                switch (element?.type) {
 
-                    if (element.type == "group") {
+                    case "group":
                         const group = element.object;
                         group.order = indexWithoutSeparators;
                         const groupChildren = element.children;
                         children.push({type: "group", object: group, children: groupChildren});
                         indexWithoutSeparators++;
+                        break;
 
-                    } else if (element.type == "dateAtom") {
+                    case "dateAtom":
                         const dateAtom = element.object;
                         dateAtom.order = indexWithoutSeparators;
                         children.push({type: "dateAtom", object: dateAtom});
                         indexWithoutSeparators++;
+                        break;
 
-                    } else if (element.type == "duration") {
+                    case "duration":
                         const duration = element.object;
                         children.push({type: "duration", object: duration});
+                        indexWithoutSeparators++;
+                        break;
 
-                    } else if (element.type == "number") {
+                    case "number":
                         console.warn(`Number ${child.text} is not valid inside a group`);
+                        break;
 
-                    } else {
+                    default:
                         console.warn(`Element ${child.text} is not valid`);
-                    }
+                        break;
+
                 }
+
 
             // Separators
             } else if (child instanceof parser.SeparatorContext) {
