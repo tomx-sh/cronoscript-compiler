@@ -13,7 +13,7 @@ DELAYMINUS: '...-' | '... -' | '..-';
 PLUS:       '+';
 MINUS:      '-';
 STAR:       '*';
-SLASH:        '/';
+SLASH:      '/';
 EQUALS:     '=';
 
 // Keywords

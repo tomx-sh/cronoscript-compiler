@@ -1,8 +1,8 @@
-import { CronoScriptVisitor } from "./antlr/TSparser/CronoScriptVisitor";
+import { CronoScriptVisitor } from "../antlr/TSparser/CronoScriptVisitor";
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor';
-import * as parser from './antlr/TSparser/CronoScriptParser';
-import * as model from './models/models';
-import { parseDuration } from "./models/utils";
+import * as parser from '../antlr/TSparser/CronoScriptParser';
+import * as model from './models';
+import { parseDuration } from "./timeUtils";
 
 export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implements CronoScriptVisitor<any> {
 
@@ -12,6 +12,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         console.warn("Default result called");
         return null;
     }
+
 
     visitCronodile(ctx: parser.CronodileContext): model.Cronodile {
         const cronodile: model.Cronodile = {};
@@ -89,6 +90,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         return cronodile
     }
 
+
     visitTag(ctx: parser.TagContext): model.Tag | null{
         const tagText = ctx.text;
         const tagToken = ctx.TAG();
@@ -138,6 +140,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         
         return null;
     }
+
 
     visitGroup(ctx: parser.GroupContext)
         :{
@@ -365,9 +368,6 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
 
         return {mainGroup, children: childrenResult};
     }
-
-
-
 
 
     visitGroupBody(ctx: parser.GroupBodyContext)
@@ -748,6 +748,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         }
         return null;
     }
+
 
     visitSeparator(ctx: parser.SeparatorContext): string | null {
         const rawText = ctx.text;
