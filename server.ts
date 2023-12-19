@@ -17,15 +17,11 @@ app.get('/', (req, res) => {
 app.post('/compile', (req, res) => {
     const code = req.body.code;
     console.log("Request body: ", code);
-    const cronodileObject = compile(code);
-    const result = {
-        errors: null,
-        cronodile: cronodileObject
-    }
-    console.log("Result: ", result);
+    const result = compile(code);
+    console.log("Result: ", JSON.stringify(result, null, 2));
     console.log("\n\n");
     res.type('json');
-    res.send(JSON.stringify(result));
+    res.send(result);
 });
 
 app.listen(port, () => {
