@@ -14,6 +14,7 @@ export default function compile(input: string): string {
     const tree = parser.cronodile();
     const visitor = new CronoScriptVisitorImpl();
     const result = visitor.visit(tree);
-    return JSON.stringify(result, null, 2)
+    //return JSON.stringify(result, null, 2)
+    return JSON.stringify(result);
 }
 

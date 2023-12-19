@@ -6,7 +6,7 @@ dotenv.config();
 
 const app = express();
 const baseUrl   = process.env.BASE_URL || 'http://localhost';
-const port      = process.env.PORT || 3000;
+const port      = process.env.PORT || 8000;
 
 app.use(express.json());
 
@@ -20,6 +20,7 @@ app.post('/compile', (req, res) => {
     const result = compile(code);
     console.log("Result: ", result);
     console.log("\n\n");
+    res.type('json');
     res.send(result);
 });
 
