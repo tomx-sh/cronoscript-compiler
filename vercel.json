@@ -1,4 +1,3 @@
 {
     "rewrites": [{ "source": "/(.*)", "destination": "/api" }],
-    "buildCommand": "echo 'No build command specified' && exit 0"
 }
