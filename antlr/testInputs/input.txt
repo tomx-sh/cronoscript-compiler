@@ -1,10 +1,3 @@
-#Tag:alone
+#dateFormat:dd/mm/yyyy
 
-[
-    ['01/01/2023' -> '02/02/2023'] "My task" #tag:task,
-    [
-        ['06/06/2023'] "nested event",
-        ['07/07/2023'] "nested event 2" @event:nested
-    ] "nested group" @nested:group,
-    ['03/03/2023'] "My event"
-] "Meta group" @tag:meta
+['01/02/2023'] "My event"

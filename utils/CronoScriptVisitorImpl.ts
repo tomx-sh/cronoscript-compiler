@@ -2,7 +2,7 @@ import { CronoScriptVisitor } from "../antlr/TSparser/CronoScriptVisitor";
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor';
 import * as parser from '../antlr/TSparser/CronoScriptParser';
 import * as model from './models';
-import { parseDuration } from "./timeUtils";
+import { parseDuration, parseUserDate } from "./timeUtils";
 
 
 /**
@@ -29,6 +29,7 @@ type GroupBodyChild = (
 export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implements CronoScriptVisitor<any> {
 
     private hierarchicalContext = new HierarchicalContext();
+    private dateFormat = "mm/dd/yyyy";
 
     defaultResult() {
         console.warn("Default result called");
@@ -49,6 +50,12 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         });
         if (tags.length > 0) cronodile.tags = tags;
 
+        // if dateFormat tag is present, set the locale
+        const reversedTags = [...tags].reverse(); // reverse to get the last tag first
+        const localeTag = reversedTags.find(tag => ( tag.symbol == "#" && tag.key == "dateFormat" && tag.value));
+        if (localeTag) {
+            this.dateFormat = localeTag.value!;
+        }
 
         // Looking for lonely dates (top level)
         const dates: model.dateAtom[] = [];
@@ -154,18 +161,17 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         
         if (ctx.DATE()) {
             const dateContent = dateText.substring(1, dateText.length - 1); // substring to remove the single quotes
-            const date = new Date(dateContent); // TODO: implement a better date parser
-
-            if (isNaN(date.getTime())) {
-                console.warn(`Date ${dateText} is not valid`);
-                return null;
-            } else {
+            const date = parseUserDate(dateContent, this.dateFormat);
+            if (date) {
                 return {
                     id:       this.hierarchicalContext.getCurrentId(),
                     parentId: this.hierarchicalContext.getParentId(),
                     order: 0,    // Will be set by the caller
                     date: date
                 };
+            } else {
+                console.warn(`Date ${dateText} is not valid`);
+                return null;
             }
         }
         

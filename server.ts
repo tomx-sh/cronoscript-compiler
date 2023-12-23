@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/compile', (req, res) => {
-    const code = req.body.code;
+    const code   = req.body.code;
     console.log("Request body: ", code);
     const result = compile(code);
     console.log("Result: ", JSON.stringify(result, null, 2));

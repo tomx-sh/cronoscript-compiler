@@ -1,3 +1,21 @@
+import { parse } from "date-fns";
+
+
+export function parseUserDate(dateStr: string, formatStr: string): Date | null {
+    try {
+        const parsedDate = parse(dateStr, formatStr, new Date());
+        if (isNaN(parsedDate.getTime())) {
+            // Invalid date handling
+            return null;
+        }
+        return parsedDate;
+    } catch (error) {
+        // Error handling
+        console.error("Error parsing date:", error);
+        return null;
+    }
+}
+
 const timeUnits = {
     second: ['s', 'sec', 'second', 'seconds', 'seconde', 'secondes'],
     minute: ['m', 'mn', 'min', 'minute', 'minutes'],
