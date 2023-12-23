@@ -4,6 +4,28 @@ import * as parser from '../antlr/TSparser/CronoScriptParser';
 import * as model from './models';
 import { parseDuration } from "./timeUtils";
 
+
+/**
+ * dateAtoms, durations, groups (without children) and tags
+ */
+type GroupChild = (
+     {type: "dateAtom", object: model.dateAtom}
+    |{type: "group", object: model.Group}
+    |{type: "tags", object: model.Tag}
+    );
+
+/**
+ * dateAtoms, durations, groups (with children), tags and separators
+ */
+type GroupBodyChild = (
+     {type: "dateAtom",  object: model.dateAtom}
+    |{type: "duration",  object: model.Duration}
+    |{type: "group",     object: model.Group, children?: GroupChild[]}
+    |{type: "separator", object:string}
+    );
+
+
+
 export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implements CronoScriptVisitor<any> {
 
     private hierarchicalContext = new HierarchicalContext();
@@ -23,6 +45,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         ctx.tag().forEach(tag => {
             const tagObject = this.visitTag(tag);
             if (tagObject) tags.push(tagObject);
+            // TODO: Maybe set the parentId of the tag to the cronodile id
         });
         if (tags.length > 0) cronodile.tags = tags;
 
@@ -83,6 +106,16 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                     }
                 });
             }
+
+            // 3. tags
+            if (groupObject.children) {
+                groupObject.children.forEach((child) => {
+                    if (child.type == "tags") {
+                        if (!cronodile.tags) cronodile.tags = [];
+                        cronodile.tags.push(child.object);
+                    }
+                });
+            }
         });
         if (groups.length > 0) cronodile.groups = groups;
         
@@ -98,17 +131,14 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
             console.warn(`Tag ${tagText} has no children`);
             return null;
         } else {
+            const parentId = this.hierarchicalContext.getCurrentId();
             const symbol =  tagToken.text[0];
             const tagContent = tagToken.text.substring(1); // substring to remove the #
             const parts = tagContent.split(":");
             const key = parts[0];
-            const value = parts[1] || null;
+            const value = parts[1];
             console.debug(`Tag ${tagText} has key ${key} and value ${value}`);
-            if (!value) {
-                return {symbol, key};
-            } else {
-                return {symbol, key, value};
-            }
+            return {parentId, symbol, key, value};
         }
     }
 
@@ -131,7 +161,8 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                 return null;
             } else {
                 return {
-                    id: this.hierarchicalContext.getCurrentId(),
+                    id:       this.hierarchicalContext.getCurrentId(),
+                    parentId: this.hierarchicalContext.getParentId(),
                     order: 0,    // Will be set by the caller
                     date: date
                 };
@@ -142,17 +173,13 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
     }
 
 
-    visitGroup(ctx: parser.GroupContext)
-        :{
-            mainGroup: model.Group,
-            children?: ({type: "dateAtom", object: model.dateAtom} | {type: "group", object: model.Group})[]
-         }
-        | null 
+    visitGroup(ctx: parser.GroupContext):{ mainGroup: model.Group, children?: GroupChild[]} | null 
     {
         const text = ctx.text;
 
         let mainGroup: model.Group = {
-            id:     this.hierarchicalContext.getCurrentId(),
+            id:       this.hierarchicalContext.getCurrentId(),
+            parentId: this.hierarchicalContext.getParentId(),
             order:  0,       // Will be set by the caller
             name:   "",
             // tags and childrenIds will be set below
@@ -170,35 +197,34 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         if (name) mainGroup.name = name;
 
         // Find tags
-        const tags: model.Tag[] = [];
+        const tags: {type: "tags", object: model.Tag}[] = [];
         ctx.tag().forEach(tag => {
             const tagObject = this.visitTag(tag);
             if (tagObject) {
-                tags.push(tagObject);
+                tags.push({type: "tags", object: tagObject});
             }
         });
-        if (tags.length > 0) mainGroup.tags = tags;
+        // We will put the tags in the children array later
 
 
-        // Process direct children
-
+        // Get the content of the group body
+        let groupBodyChildren: GroupBodyChild[] | null = [];
         const groupBody = ctx.groupBody();
-        if (!groupBody) {
-            console.warn(`Group ${text} has no body`);
-            return {mainGroup, children: undefined};
+        if (groupBody) {
+            const groupBodyResult = this.visitGroupBody(groupBody);
+            if (groupBodyResult) {
+                groupBodyChildren = groupBodyResult;
+            } else {
+                console.warn(`Group ${text} has no valid body`);
+            }
         }
 
-        let children = this.visitGroupBody(groupBody); // We will modify this
-        if (!children) {
-            console.warn(`Group ${text} has no valid children`);
-            return {mainGroup, children: undefined};
-        }
 
         // Set `delayedTo` when there's a DELAY `...` separator
-        children.forEach((child, index) => {
+        groupBodyChildren.forEach((child, index) => {
             if (child.type == "separator" && child.object == "DELAY") {
-                const left =  children![index - 1];
-                const right = children![index + 1];
+                const left =  groupBodyChildren![index - 1];
+                const right = groupBodyChildren![index + 1];
                 const compatibleObjects = ["dateAtom", "group"];
                 if (left && right && compatibleObjects.includes(left.type) && compatibleObjects.includes(right.type)) {
                     const leftObject =  left.object as model.dateAtom | model.Group;
@@ -211,10 +237,10 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         });
 
         // Set `delayedTo` when there's a DELAYPLUS `...+` or DELAYMINUS `...-` separator
-        children.forEach((child, index) => {
+        groupBodyChildren.forEach((child, index) => {
             if (child.type == "separator" && (child.object == "DELAYPLUS" || child.object == "DELAYMINUS")) {
-                const left =  children![index - 1];
-                const right = children![index + 1];
+                const left =  groupBodyChildren![index - 1];
+                const right = groupBodyChildren![index + 1];
                 const compatibleLeft = ["dateAtom", "group"];
                 const compatibleRight = ["duration"];
                 if (left && right && compatibleLeft.includes(left.type) && compatibleRight.includes(right.type)) {
@@ -248,14 +274,15 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                     this.hierarchicalContext.enterGroup(index); 
                     const dateAtom: model.dateAtom = {
                         //id: (left.object as model.dateAtom | model.Group).id + ".delay",
-                        id: this.hierarchicalContext.getCurrentId(),
+                        id:       this.hierarchicalContext.getCurrentId(),
+                        parentId: this.hierarchicalContext.getParentId(),
                         order: 0,           // Will be set later
                         date: delayDate
                     };
                     this.hierarchicalContext.leaveGroup();
 
                     // Replace the duration by the dateAtom
-                    children![index + 1] = {type: "dateAtom", object: dateAtom};
+                    groupBodyChildren![index + 1] = {type: "dateAtom", object: dateAtom};
 
                     // Set the delayedTo property
                     (left.object as model.dateAtom | model.Group).delayedTo = dateAtom.id;
@@ -266,14 +293,14 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         });
 
         // Set `linkedTo` when there's a TO `->` separator
-        children.forEach((child, index) => {
+        groupBodyChildren.forEach((child, index) => {
             if (child.type == "separator" && child.object == "TO") {
-                const left = children![index - 1];
-                const right = children![index + 1];
+                const left =  groupBodyChildren![index - 1];
+                const right = groupBodyChildren![index + 1];
                 const compatibleObjects = ["dateAtom", "group"];
                 if (left && right && compatibleObjects.includes(left.type) && compatibleObjects.includes(right.type)) {
-                    const leftObject =  left.object as model.dateAtom | model.Group;
-                    const rightObject = right.object as model.dateAtom | model.Group;
+                    const leftObject =    left.object as model.dateAtom | model.Group;
+                    const rightObject =   right.object as model.dateAtom | model.Group;
                     leftObject.linkedTo = rightObject.id;
                 } else {
                     console.warn(`Group ${text} has a separator '->' at an invalid position`);
@@ -282,10 +309,10 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         });
 
         // Set `linkedTo` when there's a TOPLUS `->+` or separator (there's no `->-` separator)
-        children.forEach((child, index) => {
+        groupBodyChildren.forEach((child, index) => {
             if (child.type == "separator" && child.object == "TOPLUS") {
-                const left = children![index - 1];
-                const right = children![index + 1];
+                const left = groupBodyChildren![index - 1];
+                const right = groupBodyChildren![index + 1];
                 const compatibleLeft = ["dateAtom", "group"];
                 const compatibleRight = ["duration"];
                 if (left && right && compatibleLeft.includes(left.type) && compatibleRight.includes(right.type)) {
@@ -313,14 +340,15 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                     this.hierarchicalContext.enterGroup(index);
                     const dateAtom: model.dateAtom = {
                         //id: (left.object as model.dateAtom | model.Group).id + ".link",
-                        id: this.hierarchicalContext.getCurrentId(),
+                        id:       this.hierarchicalContext.getCurrentId(),
+                        parentId: this.hierarchicalContext.getParentId(),
                         order: 0,           // Will be set later
                         date: linkedDate
                     };
                     this.hierarchicalContext.leaveGroup();
 
                     // Replace the duration by the dateAtom
-                    children![index + 1] = {type: "dateAtom", object: dateAtom};
+                    groupBodyChildren![index + 1] = {type: "dateAtom", object: dateAtom};
 
                     // Set the linkedTo property
                     (left.object as model.dateAtom | model.Group).linkedTo = dateAtom.id;
@@ -328,65 +356,61 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
             }
         });
 
+        // groupBodyChildren now contains only separators, dateAtoms, groups (that contain children)
+        // Durations have been replaced by dateAtoms just above, but the type still contains "duration".
 
-        // Remove separators
-        children = children.filter(child => child.type != "separator");
-
-        // Set childrenIds
-        const childrenIds = children.map(child => (child.object as model.dateAtom | model.Group).id);
-        mainGroup.childrenIds = childrenIds;
-
-        // Set orders
-        children.forEach((child, index) => {
-            (child.object as model.dateAtom | model.Group).order = index;
-        });
-
-        // Flatten the children array
-        // Get grandchildren
-        const grandchildren: ({type: "dateAtom", object: model.dateAtom} | {type: "group", object: model.Group})[] = [];
-        children.forEach(child => {
+        // Let's extract the grandchildren from the groups to process them later
+        const grandchildren: GroupChild[] = [];
+        groupBodyChildren.forEach(child => {
             if (child.type == "group" && child.children) {
                 child.children.forEach(grandchild => {
                     grandchildren.push(grandchild);
                 });
             }
         });
-        // Append grandchildren to children
-        children = children.concat(grandchildren);
 
-        // Parse children to the right return type
-        const childrenResult = children.map(child => {
+        // Let's create the result object
+        const childrenResult: GroupChild[] = [];
+        // And extract dateAtoms and groups from the groupBodyChildren array
+        // We will ditch:
+        // - durations (normaly they have been replaced by dateAtoms just above)
+        // - separators (don't need them anymore)
+        // - grandchildren (we already extracted them for later processing)
+        groupBodyChildren.forEach(child => {
             if (child.type == "dateAtom") {
-                return {type: "dateAtom", object: child.object as model.dateAtom};
+                childrenResult.push({type: "dateAtom", object: child.object});
             } else if (child.type == "group") {
-                return {type: "group", object: child.object as model.Group};
-            } else {
-                console.warn(`Child ${child} is not valid`);
-                return null;
+                childrenResult.push({type: "group", object: child.object}); // Notice how we ignored the children property of the child
             }
-        }).filter(child => child != null) as ({type: "dateAtom", object: model.dateAtom} | {type: "group", object: model.Group})[];
+        });
+
+        // Let's set the order of the dateAtoms and groups
+        childrenResult.forEach((child, index) => {
+            if (child.type == "dateAtom" || child.type == "group") {
+                (child.object as model.dateAtom | model.Group).order = index;
+            }
+        });
+
+        // Let's append the grandchildren
+        childrenResult.push(...grandchildren);
+
+        // Let's append the tags found earlier
+        childrenResult.push(...tags);
 
         return {mainGroup, children: childrenResult};
     }
 
 
-    visitGroupBody(ctx: parser.GroupBodyContext)
-        : ({type: "dateAtom",  object: model.dateAtom}
-        |  {type: "duration",  object: model.Duration}
-        |  {type: "group",     object: model.Group, children?: ({type: "dateAtom", object: model.dateAtom} | {type: "group", object: model.Group})[]}
-        |  {type: "separator", object:string})[]
-        | null
-    {
+
+    
+    visitGroupBody(ctx: parser.GroupBodyContext): GroupBodyChild[] | null {
         if (ctx.children?.length == 0) {
             console.warn(`Group body has no children`);
             return null;
         }
 
         // This array will contain the children of the group and will be returned
-        const children: ({type: "dateAtom",  object: model.dateAtom}
-                        |{type: "group",     object: model.Group, children?: ({type: "dateAtom", object: model.dateAtom} | {type: "group", object: model.Group})[]}
-                        |{type: "duration",  object: model.Duration}
-                        |{type: "separator", object:string})[] = [];
+        const children: GroupBodyChild[] = [];
 
         // Let's browse the children of the group and put them in the children array
 
@@ -460,7 +484,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
 
 
     visitElement(ctx: parser.ElementContext)
-        : {type: "group", object: model.Group, children?: ({type: "dateAtom", object: model.dateAtom} | {type: "group", object: model.Group})[]}
+        : {type: "group", object: model.Group, children?: GroupChild[]}
         | {type: "dateAtom", object: model.dateAtom}
         | {type: "duration", object: model.Duration}
         | {type: "number", object: number}
@@ -676,6 +700,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                 const rightNumber = rightObject.millis;
                 let result: model.dateAtom = {
                     id: "no id",        // Will be set by the caller
+                    parentId: this.hierarchicalContext.getParentId(),
                     order: 0,           // Will be set by the caller
                     date: new Date(0)   // Will be set later
                 };
@@ -802,5 +827,9 @@ class HierarchicalContext {
 
     getCurrentId(): string {
         return this.path.join('.');
+    }
+
+    getParentId(): string {
+        return this.path.slice(0, this.path.length - 1).join('.');
     }
 }

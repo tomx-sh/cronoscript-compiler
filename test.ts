@@ -10,4 +10,9 @@ console.log('Input:\n' + input);
 
 console.log('\n\n');
 console.log('Result:\n');
-console.log(result);
+console.log('\nTags:\n');
+console.log(result.cronodile?.tags);
+console.log('\nDateAtoms:\n');
+console.log(result.cronodile?.dateAtoms);
+console.log('\nGroups:\n');
+console.log(result.cronodile?.groups);
