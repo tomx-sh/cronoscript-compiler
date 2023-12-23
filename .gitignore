@@ -1,5 +1,7 @@
 node_modules/
 dist/
 .env
+antlr/javaParser/
+antlr/TSparser/
 
 .DS_Store
