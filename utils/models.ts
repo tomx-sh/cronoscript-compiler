@@ -22,6 +22,11 @@ export interface Cronodile {
  */
 export interface Tag {
     /**
+     * The id of the element to which the tag belongs.
+     */
+    parentId?: string;
+
+    /**
      * The symbol of the tag, like `#` or `@`
      */
     symbol: string;
@@ -47,6 +52,11 @@ export interface LinkedElement {
      * The id of the element
      */
     id: string;
+
+    /**
+     * The id of the group to which the element belongs.
+     */
+    parentId: string;
 
     /**
      * The order of the element in the group
@@ -79,12 +89,6 @@ export interface dateAtom extends LinkedElement {
  */
 export interface Group extends LinkedElement {
     name: string;
-    tags?: Tag[];
-    /**
-     * The ids of the children of the group.
-     * The children can be dateAtoms or other groups.
-     */
-    childrenIds?: string[];
 }
 
 
