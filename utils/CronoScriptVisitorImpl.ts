@@ -615,6 +615,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
             return null;
         }
 
+        // operand
         if (ctx.operand()) {
             const operand = this.visitOperand(ctx.operand()!);
             if (operand) {
@@ -624,7 +625,8 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
             }
         }
 
-        if (ctx.expression()) {
+        // '(' expression ')'
+        if (ctx.expression(0) && !ctx.operator() && !ctx.expression(1)) {
             const expression = this.visitExpression(ctx.expression(0)!);
             if (expression) {
                 return expression;
@@ -633,15 +635,16 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
             }
         }
 
-        if (ctx.operator()) {
+        // expression operator expression
+        if (ctx.expression(0) && ctx.operator() && ctx.expression(1)) {
             const operator = this.visitOperator(ctx.operator()!);
             if (!operator) {
                 console.warn(`Operator ${ctx.operator()!.text} is not valid`);
                 return null;
             }
 
-            const left =  this.visitExpression(ctx.expression(0)!);
-            const right = this.visitExpression(ctx.expression(1)!);
+            const left =  this.visitExpression(ctx.expression(0));
+            const right = this.visitExpression(ctx.expression(1));
 
             if (!left || !right) {
                 console.warn(`Expression ${rawText} is not valid`);
@@ -700,12 +703,14 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
             }
 
             if (left.type == "dateAtom" && right.type == "duration") {
+                console.log("left is dateAtom and right is duration");
                 const leftObject = left.object as model.dateAtom;
                 const leftDate = leftObject.date;
+                console.log("leftDate", leftDate);
                 const rightObject = right.object as model.Duration;
                 const rightNumber = rightObject.millis;
                 let result: model.dateAtom = {
-                    id: "no id",        // Will be set by the caller
+                    id:       this.hierarchicalContext.getCurrentId(),
                     parentId: this.hierarchicalContext.getParentId(),
                     order: 0,           // Will be set by the caller
                     date: new Date(0)   // Will be set later
