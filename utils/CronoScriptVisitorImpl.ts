@@ -29,7 +29,7 @@ type GroupBodyChild = (
 export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implements CronoScriptVisitor<any> {
 
     private hierarchicalContext = new HierarchicalContext();
-    private dateFormat = "mm/dd/yyyy";
+    private dateFormat = "MM/DD/yyyy";
 
     defaultResult() {
         console.warn("Default result called");
