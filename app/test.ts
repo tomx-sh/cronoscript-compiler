@@ -1,5 +1,5 @@
 import compile from './compiler';
-import { getEvents, getTasks, getEventsNotInTasks } from './decompiler';
+import decompile from './decompiler';
 import * as fs from 'fs';
 
 const inputFilePath = './app/antlr/testInputs/input.txt';
@@ -34,13 +34,16 @@ if (!result.cronodile) {
     process.exit(1);
 }
 
-const events = getEvents(result.cronodile);
-const tasks = getTasks(result.cronodile);
+const {events, tasks, groupBrackets, links} = decompile(result.cronodile);
 
 console.log('\nEvents:\n');
-const eventsNotInTasks = getEventsNotInTasks(events, tasks);
-console.log(eventsNotInTasks);
+console.log(events);
 
 console.log('\nTasks:\n');
 console.log(tasks);
 
+console.log('\nGroup brackets:\n');
+console.log(groupBrackets);
+
+console.log('\nLinks:\n');
+console.log(links);
