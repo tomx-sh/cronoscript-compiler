@@ -13,7 +13,7 @@ export interface Cronodile {
     /**
      * An array of dateAtoms.
      */
-    dateAtoms?: dateAtom[];
+    dateAtoms?: DateAtom[];
 }
 
 /**
@@ -80,7 +80,7 @@ export interface LinkedElement {
 /**
  * A date, which is the most basic element of a group
  */
-export interface dateAtom extends LinkedElement {
+export interface DateAtom extends LinkedElement {
     date: Date;
 }
 
@@ -88,7 +88,7 @@ export interface dateAtom extends LinkedElement {
  * A group of dateAtoms and other groups
  */
 export interface Group extends LinkedElement {
-    name: string;
+    name?: string;
 }
 
 

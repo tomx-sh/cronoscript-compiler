@@ -1,5 +1,5 @@
 import express from 'express';
-import compile from './compiler';
+import compile from '../compiler';
 import dotenv from 'dotenv';
 
 dotenv.config();

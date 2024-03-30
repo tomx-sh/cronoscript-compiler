@@ -1,3 +1,0 @@
-#dateFormat:dd/mm/yyyy
-
-['01/02/2023' + 3_day] "My event"

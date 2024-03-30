@@ -1,0 +1,13 @@
+#dateFormat:dd/mm/yyyy
+
+
+'09/09/1996'
+
+['01/02/2023'] "First event"
+['02/02/2023'] "Second event"
+['01/01/2023', '01/02/2023'] "Task with 2 date atoms"
+[['01/01/2023'] "Start date", ['01/02/2023'] "End date"] "Task w 2 events"
+[['01/01/2023'] "Start date", '01/02/2023'] "Task w 1 evt, 1 dtat"
+
+['02/02/2023'] "Third  event"
+['01/02/2023' + 3_day] "Fourth event"

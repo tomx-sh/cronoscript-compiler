@@ -1,11 +1,11 @@
 import { Cronodile } from './utils/models';
-import { CronoScriptLexer } from './antlr/TSparser/CronoScriptLexer';
-import { CronoScriptParser } from './antlr/TSparser/CronoScriptParser';
+import { CronoScriptLexer } from './antlr/dist/TSparser/CronoScriptLexer';
+import { CronoScriptParser } from './antlr/dist/TSparser/CronoScriptParser';
 import { CharStream, CharStreams, CommonTokenStream } from 'antlr4ts';
-import { CronoScriptVisitorImpl } from './utils/CronoScriptVisitorImpl';
+import { CronoScriptVisitorImpl } from './antlr/CronoScriptVisitorImpl';
 
-console.clear();
-console.log('🐊 CronoScript compiler\n');
+//console.clear();
+//console.log('🐊 CronoScript compiler\n');
 
 type CronoScriptError = {
     line: number,

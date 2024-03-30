@@ -1,15 +1,15 @@
-import { CronoScriptVisitor } from "../antlr/TSparser/CronoScriptVisitor";
+import { CronoScriptVisitor } from "./dist/TSparser/CronoScriptVisitor";
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor';
-import * as parser from '../antlr/TSparser/CronoScriptParser';
-import * as model from './models';
-import { parseDuration, parseUserDate } from "./timeUtils";
+import * as parser from './dist/TSparser/CronoScriptParser';
+import * as model from '../utils/models';
+import { parseDuration, parseUserDate } from "../utils/timeUtils";
 
 
 /**
  * dateAtoms, durations, groups (without children) and tags
  */
 type GroupChild = (
-     {type: "dateAtom", object: model.dateAtom}
+     {type: "dateAtom", object: model.DateAtom}
     |{type: "group", object: model.Group}
     |{type: "tags", object: model.Tag}
     );
@@ -18,7 +18,7 @@ type GroupChild = (
  * dateAtoms, durations, groups (with children), tags and separators
  */
 type GroupBodyChild = (
-     {type: "dateAtom",  object: model.dateAtom}
+     {type: "dateAtom",  object: model.DateAtom}
     |{type: "duration",  object: model.Duration}
     |{type: "group",     object: model.Group, children?: GroupChild[]}
     |{type: "separator", object:string}
@@ -58,7 +58,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         }
 
         // Looking for lonely dates (top level)
-        const dates: model.dateAtom[] = [];
+        const dates: model.DateAtom[] = [];
         ctx.date().forEach((date, index) => {
 
             this.hierarchicalContext.enterGroup(index);
@@ -144,17 +144,15 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
             const parts = tagContent.split(":");
             const key = parts[0];
             const value = parts[1];
-            console.debug(`Tag ${tagText} has key ${key} and value ${value}`);
             return {parentId, symbol, key, value};
         }
     }
 
 
-    visitDate(ctx: parser.DateContext): model.dateAtom | null {
+    visitDate(ctx: parser.DateContext): model.DateAtom | null {
         const dateText = ctx.text;
 
         if (ctx.ID()) {
-            console.debug(`Date ${dateText} is an ID`);
             // TODO: handle the case where the date is an ID ; browse the variable map to find the date
             return null;
         }
@@ -194,7 +192,6 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         // Process main group
         if (ctx.ID()) {
             // TODO: handle the case where the group is an ID ; browse the variable map to find the group
-            console.debug(`Group ${ctx.ID()!.text} is an ID`);
             return null;
         }
 
@@ -233,8 +230,8 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                 const right = groupBodyChildren![index + 1];
                 const compatibleObjects = ["dateAtom", "group"];
                 if (left && right && compatibleObjects.includes(left.type) && compatibleObjects.includes(right.type)) {
-                    const leftObject =  left.object as model.dateAtom | model.Group;
-                    const rightObject = right.object as model.dateAtom | model.Group;
+                    const leftObject =  left.object as model.DateAtom | model.Group;
+                    const rightObject = right.object as model.DateAtom | model.Group;
                     leftObject.delayedTo = rightObject.id;
                 } else {
                     console.warn(`Group ${text} has a separator '...' at an invalid position`);
@@ -278,8 +275,8 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
 
                     // The duration will be replaced by a dateAtom
                     this.hierarchicalContext.enterGroup(index); 
-                    const dateAtom: model.dateAtom = {
-                        //id: (left.object as model.dateAtom | model.Group).id + ".delay",
+                    const dateAtom: model.DateAtom = {
+                        //id: (left.object as model.DateAtom | model.Group).id + ".delay",
                         id:       this.hierarchicalContext.getCurrentId(),
                         parentId: this.hierarchicalContext.getParentId(),
                         order: 0,           // Will be set later
@@ -291,7 +288,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                     groupBodyChildren![index + 1] = {type: "dateAtom", object: dateAtom};
 
                     // Set the delayedTo property
-                    (left.object as model.dateAtom | model.Group).delayedTo = dateAtom.id;
+                    (left.object as model.DateAtom | model.Group).delayedTo = dateAtom.id;
                 } else {
                     console.warn(`Group ${text} has a separator '...+' or '...-' at an invalid position`);
                 }
@@ -305,8 +302,8 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                 const right = groupBodyChildren![index + 1];
                 const compatibleObjects = ["dateAtom", "group"];
                 if (left && right && compatibleObjects.includes(left.type) && compatibleObjects.includes(right.type)) {
-                    const leftObject =    left.object as model.dateAtom | model.Group;
-                    const rightObject =   right.object as model.dateAtom | model.Group;
+                    const leftObject =    left.object as model.DateAtom | model.Group;
+                    const rightObject =   right.object as model.DateAtom | model.Group;
                     leftObject.linkedTo = rightObject.id;
                 } else {
                     console.warn(`Group ${text} has a separator '->' at an invalid position`);
@@ -344,8 +341,8 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                     linkedDate = new Date(leftDate.getTime() + duration);
 
                     this.hierarchicalContext.enterGroup(index);
-                    const dateAtom: model.dateAtom = {
-                        //id: (left.object as model.dateAtom | model.Group).id + ".link",
+                    const dateAtom: model.DateAtom = {
+                        //id: (left.object as model.DateAtom | model.Group).id + ".link",
                         id:       this.hierarchicalContext.getCurrentId(),
                         parentId: this.hierarchicalContext.getParentId(),
                         order: 0,           // Will be set later
@@ -357,7 +354,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
                     groupBodyChildren![index + 1] = {type: "dateAtom", object: dateAtom};
 
                     // Set the linkedTo property
-                    (left.object as model.dateAtom | model.Group).linkedTo = dateAtom.id;
+                    (left.object as model.DateAtom | model.Group).linkedTo = dateAtom.id;
                 }
             }
         });
@@ -393,7 +390,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
         // Let's set the order of the dateAtoms and groups
         childrenResult.forEach((child, index) => {
             if (child.type == "dateAtom" || child.type == "group") {
-                (child.object as model.dateAtom | model.Group).order = index;
+                (child.object as model.DateAtom | model.Group).order = index;
             }
         });
 
@@ -491,14 +488,13 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
 
     visitElement(ctx: parser.ElementContext)
         : {type: "group", object: model.Group, children?: GroupChild[]}
-        | {type: "dateAtom", object: model.dateAtom}
+        | {type: "dateAtom", object: model.DateAtom}
         | {type: "duration", object: model.Duration}
         | {type: "number", object: number}
         | null
     {
         if (ctx.ID()) {
             // TODO: handle the case where the element is an ID ; browse the variable map to find the element
-            console.debug(`Element ${ctx.ID()!.text} is an ID`);
             return null;
         }
 
@@ -604,7 +600,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
 
 
     visitExpression(ctx: parser.ExpressionContext)
-        : {type: "dateAtom", object: model.dateAtom}
+        : {type: "dateAtom", object: model.DateAtom}
         | {type: "duration", object: model.Duration}
         | {type: "number", object: number}
         | null
@@ -703,13 +699,11 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
             }
 
             if (left.type == "dateAtom" && right.type == "duration") {
-                console.log("left is dateAtom and right is duration");
-                const leftObject = left.object as model.dateAtom;
+                const leftObject = left.object as model.DateAtom;
                 const leftDate = leftObject.date;
-                console.log("leftDate", leftDate);
                 const rightObject = right.object as model.Duration;
                 const rightNumber = rightObject.millis;
-                let result: model.dateAtom = {
+                let result: model.DateAtom = {
                     id:       this.hierarchicalContext.getCurrentId(),
                     parentId: this.hierarchicalContext.getParentId(),
                     order: 0,           // Will be set by the caller
@@ -729,7 +723,7 @@ export class CronoScriptVisitorImpl extends AbstractParseTreeVisitor<any> implem
 
 
     visitOperand(ctx: parser.OperandContext)
-        : {type: "dateAtom", object: model.dateAtom}
+        : {type: "dateAtom", object: model.DateAtom}
         | {type: "duration", object: model.Duration}
         | {type: "number", object: number}
         | null
